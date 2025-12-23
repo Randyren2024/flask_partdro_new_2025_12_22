@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _('Partdro - Home') }}{% endblock %}
+
+{% block content %}
+<!-- 英雄区域 -->
+<section class="hero-section bg-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">
+                    {{ _('Professional Drone Supply Chain Platform') }}
+                </h1>
+                <p class="lead mb-4">
+                    {{ _('Providing high-quality parts solutions and excellent service experience.') }}
+                    {{ _('From design to production, we offer comprehensive technical support.') }}
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="#" class="btn btn-light btn-lg px-4">
+                        <i class="fas fa-play me-2"></i>{{ _('Get Started') }}
+                    </a>
+                    <a href="#" class="btn btn-outline-light btn-lg px-4">
+                        <i class="fas fa-info-circle me-2"></i>{{ _('Learn More') }}
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <i class="fas fa-cogs display-1 opacity-75"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 产品分类区域 -->
+<div class="container py-5">
+    <section id="infrared" class="category-section mb-5">
+        <div class="row text-center mb-4">
+            <div class="col">
+                <h2 class="fw-bold mb-3">{{ _('Infrared Drones') }}</h2>
+                <p class="text-muted">{{ _('Advanced infrared drone technology for thermal imaging applications') }}</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            {% for product in products if product.category == 'Infrared Drones' %}
+            <div class="col-md-4">
+                <a href="{{ url_for('product_detail', product_id=product.product_id_no) }}" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm">
+                        {% if product.image_url %}
+                        <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.get_translated_name(locale) }}" style="height: 240px; object-fit: cover;">
+                        {% else %}
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 240px;">
+                            <i class="fas fa-thermometer fa-3x text-primary opacity-50"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body text-center p-4">
+                            <h5 class="card-title fw-bold">{{ product.get_translated_name(locale) }}</h5>
+                            <p class="card-text text-muted">{{ product.get_translated_description(locale) }}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% else %}
+            <div class="col-12 text-center">
+                <p class="text-muted">{{ _('No infrared drones available.') }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section id="cargo" class="category-section mb-5">
+        <div class="row text-center mb-4">
+            <div class="col">
+                <h2 class="fw-bold mb-3">{{ _('Cargo Drones') }}</h2>
+                <p class="text-muted">{{ _('Professional cargo drone solutions for various transportation needs') }}</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            {% for product in products if product.category == 'Cargo Drones' %}
+            <div class="col-md-4">
+                <a href="{{ url_for('product_detail', product_id=product.product_id_no) }}" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm">
+                        {% if product.image_url %}
+                        <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.get_translated_name(locale) }}" style="height: 240px; object-fit: cover;">
+                        {% else %}
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 240px;">
+                            <i class="fas fa-box fa-3x text-primary opacity-50"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body text-center p-4">
+                            <h5 class="card-title fw-bold">{{ product.get_translated_name(locale) }}</h5>
+                            <p class="card-text text-muted">{{ product.get_translated_description(locale) }}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% else %}
+            <div class="col-12 text-center">
+                <p class="text-muted">{{ _('No cargo drones available.') }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section id="spray" class="category-section">
+        <div class="row text-center mb-4">
+            <div class="col">
+                <h2 class="fw-bold mb-3">{{ _('Spray Drones') }}</h2>
+                <p class="text-muted">{{ _('Efficient spray drones for agricultural and industrial applications') }}</p>
+            </div>
+        </div>
+        <div class="row g-4">
+            {% for product in products if product.category == 'Spray Drones' %}
+            <div class="col-md-4">
+                <a href="{{ url_for('product_detail', product_id=product.product_id_no) }}" class="text-decoration-none">
+                    <div class="card h-100 border-0 shadow-sm">
+                        {% if product.image_url %}
+                        <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.get_translated_name(locale) }}" style="height: 240px; object-fit: cover;">
+                        {% else %}
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 240px;">
+                            <i class="fas fa-spray-can fa-3x text-primary opacity-50"></i>
+                        </div>
+                        {% endif %}
+                        <div class="card-body text-center p-4">
+                            <h5 class="card-title fw-bold">{{ product.get_translated_name(locale) }}</h5>
+                            <p class="card-text text-muted">{{ product.get_translated_description(locale) }}</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% else %}
+            <div class="col-12 text-center">
+                <p class="text-muted">{{ _('No spray drones available.') }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+
+<!-- 统计数据 -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 mb-4">
+                <h3 class="display-4 fw-bold text-primary">5000+</h3>
+                <p class="text-muted">{{ _('Parts Types') }}</p>
+            </div>
+            <div class="col-md-3 mb-4">
+                <h3 class="display-4 fw-bold text-primary">1000+</h3>
+                <p class="text-muted">{{ _('Satisfied Customers') }}</p>
+            </div>
+            <div class="col-md-3 mb-4">
+                <h3 class="display-4 fw-bold text-primary">99.8%</h3>
+                <p class="text-muted">{{ _('Customer Satisfaction') }}</p>
+            </div>
+            <div class="col-md-3 mb-4">
+                <h3 class="display-4 fw-bold text-primary">24/7</h3>
+                <p class="text-muted">{{ _('Technical Support') }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

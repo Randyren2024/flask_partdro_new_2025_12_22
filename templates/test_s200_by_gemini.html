@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="{{ get_locale() }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ _('GDU S200 - Industrial UAV Flagship') }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #00f2ff; /* 赛博蓝 */
+            --secondary-color: #2b6eff;
+            --bg-dark: #050505;
+            --bg-card: #121212;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --neon-glow: 0 0 10px rgba(0, 242, 255, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+        h1, h2, h3 {
+            font-family: 'Orbitron', sans-serif; /* 科幻标题字体 */
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 0;
+        }
+
+        img, video {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 4px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 动态背景网格 */
+        .tech-bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Header */
+        header {
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 28px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            margin-left: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            transition: color 0.3s, text-shadow 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+            text-shadow: 0 0 8px var(--primary-color);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Banner */
+        .hero {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hero video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+            filter: brightness(0.6) contrast(1.1); /* 压暗视频，增强文字对比 */
+        }
+
+        /* 视频上层的暗色渐变遮罩 */
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 40%, var(--bg-dark) 100%);
+            z-index: -1;
+        }
+
+        .hero-content {
+            z-index: 2;
+            opacity: 0;
+            animation: fadeInUp 1.2s ease-out forwards;
+        }
+
+        .hero-content h1 {
+            font-size: 64px;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #fff, var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+        }
+
+        .hero-content p {
+            font-size: 24px;
+            color: rgba(255,255,255,0.8);
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        /* Specs Grid */
+        section {
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .specs-section {
+            background: linear-gradient(180deg, var(--bg-dark) 0%, #0a0a0a 100%);
+            text-align: center;
+        }
+
+        .section-desc {
+            max-width: 700px;
+            margin: 0 auto 50px auto;
+            color: var(--text-muted);
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .spec-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            padding: 40px 20px;
+            border-radius: 2px;
+            position: relative;
+            transition: transform 0.3s, box-shadow 0.3s;
+            overflow: hidden;
+        }
+        
+        /* 科技感边角装饰 */
+        .spec-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .spec-item:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 30px -10px rgba(0, 242, 255, 0.15);
+        }
+
+        .spec-item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .spec-item h3 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 48px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .spec-item p {
+            color: var(--text-muted);
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Feature Block */
+        .feature-block {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            margin-bottom: 100px;
+            opacity: 0; /* JS控制显现 */
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .feature-block.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-block:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .feature-text {
+            flex: 1;
+        }
+
+        .feature-text h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .feature-text h2::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 4px;
+            background: var(--primary-color);
+            margin-top: 10px;
+        }
+
+        .feature-text p {
+            font-size: 16px;
+            color: #ccc;
+            line-height: 1.8;
+        }
+
+        .feature-media {
+            flex: 1.2;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+        }
+
+        .feature-media::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.6);
+            pointer-events: none;
+        }
+
+        /* Applications Grid */
+        .applications-section {
+            background: #0a0a0a;
+        }
+
+        .app-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            group: card;
+        }
+        
+        .app-card img {
+            width: 100%;
+            transition: transform 0.5s;
+            filter: grayscale(80%);
+        }
+
+        .app-card:hover img {
+            transform: scale(1.05);
+            filter: grayscale(0%);
+        }
+
+        .app-card p {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px;
+            background: rgba(0,0,0,0.8);
+            margin: 0;
+            text-align: center;
+            font-weight: bold;
+            color: #fff;
+            backdrop-filter: blur(5px);
+            border-top: 1px solid var(--primary-color);
+        }
+
+        /* Form Section */
+        .contact-section {
+            background: linear-gradient(0deg, #000, #0a0a0a);
+            position: relative;
+        }
+
+        /* 装饰背景 */
+        .contact-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1px;
+            height: 100px;
+            background: linear-gradient(transparent, var(--primary-color));
+        }
+
+        .form-box {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 50px;
+            border-radius: 12px;
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+        }
+
+        .form-box h2 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 40px;
+        }
+
+        .form-group label {
+            color: var(--primary-color);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .form-group input, .form-group textarea {
+            background: #0e0e0e;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 15px;
+            border-radius: 4px;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+            background: #151515;
+        }
+
+        .btn-submit {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            padding: 15px 40px;
+            font-size: 16px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-submit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: var(--primary-color);
+            transition: width 0.3s;
+            z-index: -1;
+        }
+
+        .btn-submit:hover {
+            color: #000;
+            box-shadow: 0 0 20px var(--primary-color);
+        }
+
+        .btn-submit:hover::before {
+            width: 100%;
+        }
+
+        /* Footer */
+        footer {
+            background: #000;
+            color: #666;
+            padding: 60px 0;
+            font-size: 12px;
+            border-top: 1px solid #222;
+        }
+
+        footer a {
+            color: #888;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 36px;
+            }
+            .feature-block, .feature-block:nth-child(even) {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .form-box {
+                padding: 30px 20px;
+            }
+        }
+
+        /* Keyframes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="tech-bg-grid"></div>
+
+    <header>
+        <div class="container nav-flex">
+            <div class="logo">GDU <span style="color:var(--primary-color)">TECH</span></div>
+            <div class="nav-links">
+                <a href="#">S200</a>
+                <a href="#">Features</a>
+                <a href="#">Specs</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <video autoplay muted loop playsinline poster="https://cdncn.prodrone-tech.com/portal/20240626/63dc3d356ee7139ba067ce24de7e0f35.jpg-watermark">
+            <source src="https://cdncn.prodrone-tech.com/portal/20240626/5ed4715335a1ba1e494ff9939ece994d.mp4" type="video/mp4">
+        </video>
+        <div class="hero-content">
+            <h1>S200 Industrial Flagship</h1>
+            <p>ADVANCED AUTONOMY • PORTABLE • POWERFUL</p>
+        </div>
+    </div>
+
+    <section class="specs-section">
+        <div class="container">
+            <h2>Portable & Powerful</h2>
+            <p class="section-desc">Autonomous obstacle detection with military-grade AES encryption. Built for the toughest environments.</p>
+            <div class="specs-grid">
+                <div class="spec-item">
+                    <h3>38<span style="font-size:20px">min</span></h3>
+                    <p>Flight Time</p>
+                </div>
+                <div class="spec-item">
+                    <h3>6<span style="font-size:20px">KM</span></h3>
+                    <p>Max Altitude</p>
+                </div>
+                <div class="spec-item">
+                    <h3>15<span style="font-size:20px">KM</span></h3>
+                    <p>HD Transmission</p>
+                </div>
+                <div class="spec-item">
+                    <h3>486<span style="font-size:20px">mm</span></h3>
+                    <p>Diagonal Distance</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            
+            <div class="feature-block">
+                <div class="feature-text">
+                    <h2>Beyond Data Link Limits</h2>
+                    <p>Revolutionary 5G integration resolves complex communication challenges. The S200 breaks traditional data link boundaries, providing a robust solution for traffic management, safety inspection, and emergency response scenarios.</p>
+                </div>
+                <div class="feature-media">
+                    <video autoplay muted loop playsinline width="100%">
+                        <source src="https://cdncn.prodrone-tech.com/portal/20240626/9da105e00997cc3e5f2e8b8c66a5d2b8.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+
+            <div class="feature-block">
+                <div class="feature-text">
+                    <h2>Dual-Link Comms</h2>
+                    <p>Operating in areas without ground networks? The S200 achieves dual short-message communication reliability. This breaks the limits of traditional mechanisms, guaranteeing a lifeline even in dead zones.</p>
+                </div>
+                <div class="feature-media">
+                    <video autoplay muted loop playsinline width="100%">
+                        <source src="https://cdncn.prodrone-tech.com/lscIW2z8MENqWm8UCVJqQjY34qXG.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+
+            <div class="feature-block">
+                <div class="feature-text">
+                    <h2>Modular Ecosystem</h2>
+                    <p>Versatility is key. Compatible with a wide array of payloads: dual/trio/quadra-sensor cameras, megaphones, floodlights, and edge AI boxes. One platform, infinite possibilities.</p>
+                </div>
+                <div class="feature-media">
+                    <img src="https://cdncn.prodrone-tech.com/portal/20240627/4858a69982ab23b17a9af28cd6ba1be6.jpg-watermark" alt="Ecosystem">
+                </div>
+            </div>
+
+            <div class="feature-block">
+                <div class="feature-text">
+                    <h2>Thermal Mastery</h2>
+                    <p>Superior thermal imaging performance ensures targets are locked instantly, even during night reconnaissance. Achieve efficient air-ground coordination regardless of lighting conditions.</p>
+                </div>
+                <div class="feature-media">
+                    <video autoplay muted loop playsinline width="100%">
+                        <source src="https://cdncn.prodrone-tech.com/lqfqvb7pRbJvIRNjh8xm3lMseWzR.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+
+            <div class="feature-block">
+                <div class="feature-text">
+                    <h2>AI Computing Power</h2>
+                    <p><span style="color:var(--primary-color); font-size: 24px; font-family:'Rajdhani'">21T On-board + 100T Edge</span><br><br>Unleash the power of real-time recognition. Flexible algorithms adapt to scene needs, performing instant target tracking and intelligent analysis on the fly.</p>
+                </div>
+                <div class="feature-media">
+                    <video autoplay muted loop playsinline width="100%">
+                        <source src="https://cdncn.prodrone-tech.com/portal/20240627/d8a881e638d7adcb1765be457ec76850.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+
+            <div class="feature-block">
+                <div class="feature-text">
+                    <h2>GNSS-Denied Navigation</h2>
+                    <p>Powered by advanced SLAM technology, the S200 navigates complex indoor environments like substations and warehouses autonomously, even without GPS signals.</p>
+                </div>
+                <div class="feature-media">
+                    <img src="https://cdncn.prodrone-tech.com/portal/20240627/55cba5940bf69319a512178a9aa369ff.jpg-watermark" alt="Indoor Navigation">
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="applications-section">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 50px;">Industry Applications</h2>
+            <div class="specs-grid">
+                <div class="app-card">
+                    <img src="https://cdncn.prodrone-tech.com/portal/20240626/63dc3d356ee7139ba067ce24de7e0f35.jpg-watermark">
+                    <p>POWER INSPECTION</p>
+                </div>
+                <div class="app-card">
+                    <img src="https://cdncn.prodrone-tech.com/portal/20240626/3163d32a2fd5cca3e4f62c79485094ff.jpg-watermark">
+                    <p>SMART CITY</p>
+                </div>
+                <div class="app-card">
+                    <img src="https://cdncn.prodrone-tech.com/portal/20240626/544c71272a77f10cc9fdbc4edd80eb57.jpg-watermark">
+                    <p>ECOLOGICAL PROTECTION</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2 style="text-align:center; margin-bottom: 40px;">Technical Specifications</h2>
+            <div style="background: #fff; padding: 20px; border-radius: 8px;">
+                <img src="https://cdncn.prodrone-tech.com/portal/20250922/0817397ee9efdcb12ba18fad3aec4eec.png-watermark" alt="Full Specs" style="margin: 0 auto;">
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-section" id="contact">
+        <div class="container">
+            <div class="form-box">
+                <h2>REQUEST QUOTE</h2>
+                <form>
+                    <div class="specs-grid" style="margin-top:0; margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label>Name *</label>
+                            <input type="text">
+                        </div>
+                        <div class="form-group">
+                            <label>Phone *</label>
+                            <input type="text">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Company Name *</label>
+                        <input type="text">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address *</label>
+                        <input type="email">
+                    </div>
+                    <div class="form-group">
+                        <label>Interested Industries</label>
+                        <input type="text" placeholder="e.g., Powerline Inspection">
+                    </div>
+                    <div class="form-group">
+                        <label>Message *</label>
+                        <textarea rows="5"></textarea>
+                    </div>
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button type="button" class="btn-submit">Initialize Request</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>
+                <a href="#">Solutions</a> | 
+                <a href="#">Enterprise Products</a> | 
+                <a href="#">UAV Service</a> | 
+                <a href="#">About GDU</a>
+            </p>
+            <p style="opacity: 0.5; margin-top: 10px;">Copyright © GDU TECHNOLOGY ALL RIGHTS RESERVED</p>
+        </div>
+    </footer>
+
+    <script>
+        // 简单的滚动显现动画脚本
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            const featureBlocks = document.querySelectorAll('.feature-block');
+            featureBlocks.forEach(block => {
+                observer.observe(block);
+            });
+        });
+    </script>
+</body>
+</html>

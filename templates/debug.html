@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEBUG CONSOLE | Partdro</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 (Dark Theme Compatible) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #00f2ff; /* Cyber Blue */
+            --secondary-color: #2b6eff;
+            --bg-dark: #050505;
+            --bg-card: #121212;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --success-color: #00ff9d;
+            --error-color: #ff4d4d;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Tech Background Grid */
+        .tech-bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 1;
+            padding-top: 40px;
+            padding-bottom: 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1, h2, h3, h4, h5 {
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Custom Card Style */
+        .tech-card {
+            background: rgba(18, 18, 18, 0.8);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .tech-card:hover {
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.15);
+            border-color: rgba(0, 242, 255, 0.3);
+        }
+
+        /* Form Controls */
+        .form-control, .form-select {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .form-control:focus {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary-color);
+            color: var(--text-main);
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+        }
+
+        .form-label {
+            color: var(--primary-color);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        /* Buttons */
+        .btn-tech {
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-tech:hover {
+            background: var(--primary-color);
+            color: #000;
+            box-shadow: 0 0 15px var(--primary-color);
+        }
+
+        .btn-tech-primary {
+            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+            border: none;
+            color: #000;
+            font-weight: 700;
+        }
+
+        .btn-tech-primary:hover {
+            opacity: 0.9;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+            color: #000;
+        }
+
+        /* Status Indicators */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: 1px solid transparent;
+        }
+
+        .status-ok {
+            background-color: rgba(0, 255, 157, 0.1);
+            color: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .status-err {
+            background-color: rgba(255, 77, 77, 0.1);
+            color: var(--error-color);
+            border-color: var(--error-color);
+        }
+
+        /* Loading State */
+        .loading-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .cyber-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid transparent;
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Helpers */
+        .text-cyber { color: var(--primary-color) !important; }
+        .border-cyber { border-color: var(--primary-color) !important; }
+    </style>
+</head>
+<body>
+    <div class="tech-bg-grid"></div>
+
+    <div class="main-container">
+        <!-- Header Section -->
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <div>
+                <h1 class="display-4 text-cyber fw-bold mb-0">
+                    <i class="fas fa-terminal me-3"></i>DEBUG CONSOLE
+                </h1>
+                <p class="text-muted mt-2 mb-0" style="font-family: 'Rajdhani'; letter-spacing: 1px;">
+                    PARTDRO SYSTEM DIAGNOSTICS & DATA INJECTION
+                </p>
+            </div>
+            <div class="text-end">
+                <div class="status-badge {{ 'status-ok' if 'Connected' in supabase_status else 'status-err' }}">
+                    <i class="fas {{ 'fa-check-circle' if 'Connected' in supabase_status else 'fa-exclamation-triangle' }} me-2"></i>
+                    SUPABASE: {{ supabase_status }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <ul class="nav nav-tabs border-bottom-0 mb-4" id="debugTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active text-cyber bg-transparent border-0 fw-bold" id="single-tab" data-bs-toggle="tab" data-bs-target="#single" type="button" role="tab">
+                    <i class="fas fa-cube me-2"></i>SINGLE PRODUCT
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link text-muted bg-transparent border-0 fw-bold" id="csv-tab" data-bs-toggle="tab" data-bs-target="#csv" type="button" role="tab">
+                    <i class="fas fa-file-csv me-2"></i>BULK IMPORT (CSV)
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="debugTabsContent">
+            <!-- Tab 1: Single Product (Existing Form) -->
+            <div class="tab-pane fade show active" id="single" role="tabpanel">
+                <form id="productForm">
+                    <!-- ... Existing Single Product Form Content ... -->
+                    <div class="row">
+                        <!-- Left Column: Base Info -->
+                        <div class="col-lg-5">
+                            <div class="tech-card h-100">
+                                <h4 class="mb-4 text-white"><i class="fas fa-cube me-2"></i>Product Identity</h4>
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Product ID (Slug)</label>
+                                    <input type="text" class="form-control" name="product_id_no" placeholder="e.g. s300" required>
+                                    <div class="form-text text-muted">Unique identifier used in URL (e.g. /product/s300)</div>
+                                </div>
+
+                                <div class="row g-3 mb-3">
+                                    <div class="col-6">
+                                        <label class="form-label">Model</label>
+                                        <input type="text" class="form-control" name="model" placeholder="S300" required>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">Category ID</label>
+                                        <input type="number" class="form-control" name="category_id" value="1">
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Landing Page Template</label>
+                                    <input type="text" class="form-control" name="landing_page" placeholder="e.g. s150_landing_page.html">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Product Image</label>
+                                    <input type="file" class="form-control" name="image_file" accept="image/*">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Content & Translation -->
+                        <div class="col-lg-7">
+                            <div class="tech-card border-cyber">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h4 class="mb-0 text-cyber"><i class="fas fa-language me-2"></i>Content & AI Translation</h4>
+                                    <span class="badge bg-dark border border-secondary text-muted">Powered by DeepSeek</span>
+                                </div>
+
+                                <!-- English Source -->
+                                <div class="p-3 mb-4 rounded" style="background: rgba(0, 242, 255, 0.05); border: 1px dashed var(--primary-color);">
+                                    <h5 class="text-white mb-3">🇺🇸 English Source (Base)</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label text-white">Product Name</label>
+                                        <input type="text" class="form-control" name="name" id="sourceName" required>
+                                        <input type="hidden" name="name_en" id="targetNameEn">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label text-white">Description</label>
+                                        <textarea class="form-control" name="description" id="sourceDesc" rows="3"></textarea>
+                                        <input type="hidden" name="description_en" id="targetDescEn">
+                                    </div>
+                                    <button type="button" class="btn btn-tech w-100" id="btnTranslate">
+                                        <i class="fas fa-magic me-2"></i>Generate Multi-Language Content
+                                    </button>
+                                </div>
+
+                                <!-- Translations -->
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <h5 class="text-muted mb-2">🇯🇵 Japanese</h5>
+                                        <div class="mb-2">
+                                            <input type="text" class="form-control form-control-sm mb-1" name="name_ja" id="targetNameJa" placeholder="Name (JA)">
+                                            <textarea class="form-control form-control-sm" name="description_ja" id="targetDescJa" rows="3" placeholder="Description (JA)"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h5 class="text-muted mb-2">🇪🇸 Spanish</h5>
+                                        <div class="mb-2">
+                                            <input type="text" class="form-control form-control-sm mb-1" name="name_es" id="targetNameEs" placeholder="Name (ES)">
+                                            <textarea class="form-control form-control-sm" name="description_es" id="targetDescEs" rows="3" placeholder="Description (ES)"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Bar -->
+                    <div class="tech-card mt-3 text-center">
+                        <button type="submit" class="btn btn-tech-primary btn-lg px-5 py-3" id="btnSubmit">
+                            <i class="fas fa-rocket me-2"></i>DEPLOY TO DATABASE
+                        </button>
+                        <div class="mt-2 text-muted small" style="font-family: 'Rajdhani'">
+                            ACTION WILL UPSERT DATA TO SUPABASE 'PRODUCT' TABLE
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tab 2: CSV Import -->
+            <div class="tab-pane fade" id="csv" role="tabpanel">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="tech-card text-center py-5">
+                            <h3 class="text-white mb-4"><i class="fas fa-file-csv fa-2x text-cyber mb-3 d-block"></i>Batch Product Import</h3>
+                            <p class="text-muted mb-4" style="font-family: 'Rajdhani'; font-size: 1.1rem;">
+                                Upload a CSV file to bulk insert or update products.<br>
+                                The file must include a header row matching database columns.
+                            </p>
+                            
+                            <div class="d-flex justify-content-center gap-3 mb-5">
+                                <a href="/static/product_import_template.csv" class="btn btn-tech" download>
+                                    <i class="fas fa-download me-2"></i>Download Template
+                                </a>
+                            </div>
+
+                            <form id="csvForm" class="text-start p-4 rounded" style="background: rgba(255,255,255,0.02); border: 1px dashed var(--border-color);">
+                                <div class="mb-4">
+                                    <label class="form-label">Select CSV File</label>
+                                    <input type="file" class="form-control form-control-lg" name="csv_file" accept=".csv" required>
+                                </div>
+                                <button type="submit" class="btn btn-tech-primary w-100 py-3">
+                                    <i class="fas fa-upload me-2"></i>START BATCH IMPORT
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Result Console -->
+        <div id="resultArea" class="tech-card mt-4 d-none">
+            <h4 class="text-white mb-3"><i class="fas fa-terminal me-2"></i>Operation Log</h4>
+            <div id="resultMsg" class="p-3 rounded mb-3" style="font-family: 'Courier New', monospace;"></div>
+            <div class="text-center">
+                <img id="uploadedImg" src="" class="img-fluid rounded border border-secondary d-none" style="max-height: 300px;">
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay d-none">
+        <div class="cyber-spinner mb-3"></div>
+        <h3 class="text-cyber" style="font-family: 'Orbitron'">PROCESSING...</h3>
+        <p class="text-white" id="loadingText" style="font-family: 'Rajdhani'">Connecting to Neural Network</p>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const loading = {
+            show: (text) => {
+                document.getElementById('loadingText').innerText = text;
+                document.getElementById('loadingOverlay').classList.remove('d-none');
+            },
+            hide: () => {
+                document.getElementById('loadingOverlay').classList.add('d-none');
+            }
+        };
+
+        // Sync EN base to hidden fields
+        ['sourceName', 'sourceDesc'].forEach(id => {
+            document.getElementById(id).addEventListener('input', e => {
+                const targetId = id === 'sourceName' ? 'targetNameEn' : 'targetDescEn';
+                document.getElementById(targetId).value = e.target.value;
+            });
+        });
+
+        // AI Translate
+        document.getElementById('btnTranslate').addEventListener('click', async () => {
+            const name = document.getElementById('sourceName').value;
+            const desc = document.getElementById('sourceDesc').value;
+
+            if (!name) {
+                alert("Please input English Name first.");
+                return;
+            }
+
+            loading.show("DeepSeek AI is translating content...");
+
+            try {
+                const res = await fetch('/debug/translate', {
+                    method: 'POST',
+                    body: JSON.stringify({ name, description: desc }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const json = await res.json();
+                
+                if (json.ok) {
+                    const data = json.data;
+                    document.getElementById('targetNameJa').value = data.name_ja || "";
+                    document.getElementById('targetDescJa').value = data.description_ja || "";
+                    document.getElementById('targetNameEs').value = data.name_es || "";
+                    document.getElementById('targetDescEs').value = data.description_es || "";
+                    
+                    // Sync EN
+                    document.getElementById('targetNameEn').value = name;
+                    document.getElementById('targetDescEn').value = desc;
+                } else {
+                    alert("AI Error: " + json.error);
+                }
+            } catch (e) {
+                alert("Network Error: " + e);
+            } finally {
+                loading.hide();
+            }
+        });
+
+        // Submit
+        document.getElementById('productForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = new FormData(e.target);
+            const resultArea = document.getElementById('resultArea');
+            const msgBox = document.getElementById('resultMsg');
+            const img = document.getElementById('uploadedImg');
+            
+            loading.show("Uploading assets & Syncing database...");
+            resultArea.classList.add('d-none');
+            img.classList.add('d-none');
+
+            try {
+                const res = await fetch('/debug/upload_product', {
+                    method: 'POST',
+                    body: form
+                });
+                const json = await res.json();
+                
+                resultArea.classList.remove('d-none');
+                
+                if (json.ok) {
+                    msgBox.className = "p-3 rounded bg-success bg-opacity-10 text-success border border-success";
+                    msgBox.innerHTML = `<strong>[SUCCESS]</strong> Product deployed successfully.<br>Image URL: ${json.image_url || 'N/A'}`;
+                    if (json.image_url) {
+                        img.src = json.image_url;
+                        img.classList.remove('d-none');
+                    }
+                } else {
+                    msgBox.className = "p-3 rounded bg-danger bg-opacity-10 text-danger border border-danger";
+                    msgBox.innerHTML = `<strong>[ERROR]</strong> ${json.error}`;
+                }
+            } catch (e) {
+                alert("System Error: " + e);
+            } finally {
+                loading.hide();
+            }
+        });
+        // Submit CSV Form
+        document.getElementById('csvForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = new FormData(e.target);
+            const resultArea = document.getElementById('resultArea');
+            const msgBox = document.getElementById('resultMsg');
+            const img = document.getElementById('uploadedImg');
+            
+            loading.show("Parsing CSV & Batch Uploading...");
+            resultArea.classList.add('d-none');
+            img.classList.add('d-none');
+
+            try {
+                const res = await fetch('/debug/upload_csv', {
+                    method: 'POST',
+                    body: form
+                });
+                const json = await res.json();
+                
+                resultArea.classList.remove('d-none');
+                
+                if (json.ok) {
+                    msgBox.className = "p-3 rounded bg-success bg-opacity-10 text-success border border-success";
+                    msgBox.innerHTML = `<strong>[BATCH SUCCESS]</strong> ${json.message}`;
+                } else {
+                    msgBox.className = "p-3 rounded bg-danger bg-opacity-10 text-danger border border-danger";
+                    msgBox.innerHTML = `<strong>[ERROR]</strong> ${json.error}`;
+                }
+            } catch (e) {
+                alert("System Error: " + e);
+            } finally {
+                loading.hide();
+            }
+        });
+    </script>
+</body>
+</html>

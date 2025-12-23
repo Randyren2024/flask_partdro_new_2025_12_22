@@ -1,0 +1,110 @@
+<!-- Footer -->
+<footer class="bg-dark text-light py-5 mt-5">
+    <div class="container">
+        <div class="row">
+            <!-- 公司信息 -->
+            <div class="col-lg-4 col-md-6 mb-4">
+                <h5 class="text-primary mb-3">
+                    <i class="fas fa-cogs me-2"></i>Partdro
+                </h5>
+                <p class="text-muted">
+                    Partdro is a leading provider of high-quality electronic components and solutions. We are dedicated to offering reliable products and exceptional service to our global customers.
+                </p>
+                <div class="social-links">
+                    <a href="#" class="text-light me-3">
+                        <i class="fab fa-twitter fa-lg"></i>
+                    </a>
+                    <a href="#" class="text-light me-3">
+                        <i class="fab fa-pinterest fa-lg"></i>
+                    </a>
+                    <a href="#" class="text-light me-3">
+                        <i class="fab fa-linkedin fa-lg"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 快速链接 -->
+            <div class="col-lg-2 col-md-6 mb-4">
+                <h6 class="text-uppercase fw-bold mb-3">{{ _('Quick Links') }}</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <a href="{{ url_for('index') }}" class="text-muted text-decoration-none">{{ _('Home') }}</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{{ url_for('products_page') }}" class="text-muted text-decoration-none">{{ _('Products') }}</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{{ url_for('about') }}" class="text-muted text-decoration-none">{{ _('About Us') }}</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{{ url_for('terms_and_services') }}" class="text-muted text-decoration-none">{{ _('Terms & Service') }}</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="{{ url_for('privacy_policy') }}" class="text-muted text-decoration-none">{{ _('Privacy Policy') }}</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 服务支持 -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <h6 class="text-uppercase fw-bold mb-3">{{ _('Service Support') }}</h6>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none">{{ _('Technical Support') }}</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none">{{ _('After-sales Service') }}</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none">{{ _('FAQ') }}</a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="text-muted text-decoration-none">{{ _('Documentation') }}</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 联系信息 -->
+            <div class="col-lg-3 col-md-6 mb-4">
+                <h6 class="text-uppercase fw-bold mb-3">{{ _('Contact Info') }}</h6>
+                <ul class="list-unstyled text-muted">
+                    <li class="mb-2">
+                        <i class="fas fa-map-marker-alt me-2"></i>
+                        {{ _('Shenzhen, China') }}
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-envelope me-2"></i>
+                        {{ _('info@partdro.com') }}
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-phone me-2"></i>
+                        {{ _('+86 13362853598') }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <hr class="my-4 bg-secondary">
+
+        <!-- 版权信息 -->
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start">
+                <p class="text-muted mb-0">
+                    {{ _('© 2025 Partdro. All rights reserved.') }}
+                </p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <span class="text-muted">{{ _('Made with ❤️ by Partdro') }}</span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- WhatsApp Floating Button -->
+<div class="whatsapp-fab position-fixed bottom-0 end-0 m-4 cursor-pointer z-3" 
+     style="width: 60px; height: 60px; transition: all 0.3s ease; cursor: pointer;" 
+     onmouseover="this.style.transform='scale(1.1)'" 
+     onmouseout="this.style.transform='scale(1)'"
+     onclick="window.open('https://wa.me/8613362853598', '_blank')">
+    <img src="{{ url_for('static', filename='whatsapp-svgrepo-com.svg') }}" alt="WhatsApp" style="width: 60px; height: 60px; cursor: pointer;">
+</div>

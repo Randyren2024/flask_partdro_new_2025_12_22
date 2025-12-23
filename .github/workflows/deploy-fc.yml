@@ -1,0 +1,62 @@
+name: Deploy to Aliyun FC
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  ACR_REGISTRY: registry.cn-hangzhou.aliyuncs.com
+  ACR_NAMESPACE: partdro-namespace # Replace with your namespace
+  ACR_REPO: partdro-flask
+  IMAGE_TAG: ${{ github.sha }}
+  FC_REGION: cn-hangzhou
+  FC_SERVICE: partdro-service
+  FC_FUNCTION: partdro-function
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v3
+
+      - name: Login to Aliyun ACR
+        uses: aliyun/acr-login@v1
+        with:
+          login-server: ${{ env.ACR_REGISTRY }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Build and Push Docker Image
+        run: |
+          IMAGE_URI="$ACR_REGISTRY/$ACR_NAMESPACE/$ACR_REPO:$IMAGE_TAG"
+          docker build -t $IMAGE_URI .
+          docker push $IMAGE_URI
+          echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
+
+      - name: Install Aliyun Serverless Devs
+        run: npm install -g @serverless-devs/s
+
+      - name: Configure Aliyun Credentials
+        run: |
+          s config add --AccessKeyID ${{ secrets.ALIYUN_ACCESS_KEY_ID }} --AccessKeySecret ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }} -a default
+
+      - name: Deploy to FC
+        # This step assumes you have an s.yaml or uses FC API directly.
+        # Here is a simple update command example if function already exists:
+        uses: aliyun/fc-deploy-action@v1 # Hypothetical or custom script action
+        # Or using s deploy directly if s.yaml exists. For custom container update:
+        # Note: Official actions might vary, using aliyun-cli is also an option.
+        # Below is a standard cli update command concept:
+        run: |
+            # Install aliyun cli
+            curl -o aliyun-cli-linux-3.0.124-amd64.tgz https://aliyuncli.alicdn.com/aliyun-cli-linux-3.0.124-amd64.tgz
+            tar xzf aliyun-cli-linux-3.0.124-amd64.tgz
+            sudo mv aliyun /usr/local/bin/
+            
+            # Configure
+            aliyun configure set --profile default --mode AK --region $FC_REGION --access-key-id ${{ secrets.ALIYUN_ACCESS_KEY_ID }} --access-key-secret ${{ secrets.ALIYUN_ACCESS_KEY_SECRET }}
+            
+            # Update Function Image
+            aliyun fc-open 2021-04-06 UpdateFunction --serviceName $FC_SERVICE --functionName $FC_FUNCTION --customContainerConfig "{\"Image\": \"$IMAGE_URI\"}"

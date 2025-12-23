@@ -1,0 +1,3 @@
+product_id_no,category_id,model,landing_page,name,description,thumbnail,name_en,description_en,name_ja,description_ja,name_es,description_es
+s400,1,S400,s150_landing_page.html,S400 Rescue Drone,High-speed rescue drone for emergency response.,https://example.com/s400.jpg,S400 Rescue Drone,High-speed rescue drone for emergency response.,S400 救助ドローン,緊急対応用高速救助ドローン。,S400 Dron de Rescate,Dron de rescate de alta velocidad para respuesta de emergencia.
+s500,1,S500,s150_landing_page.html,S500 Heavy Lift,Heavy lift drone for industrial transport.,,S500 Heavy Lift,Heavy lift drone for industrial transport.,S500 重量級リフト,産業輸送用重量級リフトドローン。,S500 Carga Pesada,Dron de carga pesada para transporte industrial.

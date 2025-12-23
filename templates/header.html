@@ -1,0 +1,61 @@
+<!-- 导航栏 -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+    <div class="container">
+        <!-- 品牌标识 -->
+        <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
+            <i class="fas fa-cogs me-2"></i>
+            <strong>Partdro</strong>
+        </a>
+
+        <!-- 移动端汉堡菜单按钮 -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- 导航菜单 -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('index') }}">
+                        <i class="fas fa-home me-1"></i>{{ _('Home') }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('products_page') }}">
+                        <i class="fas fa-box me-1"></i>{{ _('Products') }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-info-circle me-1"></i>{{ _('About Us') }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-envelope me-1"></i>{{ _('Contact Us') }}
+                    </a>
+                </li>
+            </ul>
+
+            <!-- 右侧功能区域 -->
+            <div class="d-flex">
+                <div class="input-group me-2" style="max-width: 300px;">
+                    <input type="text" class="form-control" placeholder="{{ _('Search...') }}">
+                    <a href="#" class="btn btn-light">
+                        <i class="fas fa-search"></i>
+                    </a>
+                </div>
+
+                <div class="dropdown">
+                    <a class="btn btn-light dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ _('Language') }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ url_for('set_lang', lang='en') }}">English</a></li>
+                        <li><a class="dropdown-item" href="{{ url_for('set_lang', lang='zh_CN') }}">简体中文</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
