@@ -1,162 +1,234 @@
-{% extends "base.html" %}
-
-{% block title %}{{ _('Partdro - Home') }}{% endblock %}
+{% extends 'base.html' %}
 
 {% block content %}
-<!-- 英雄区域 -->
-<section class="hero-section bg-primary text-white py-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4">
-                    {{ _('Professional Drone Supply Chain Platform') }}
-                </h1>
-                <p class="lead mb-4">
-                    {{ _('Providing high-quality parts solutions and excellent service experience.') }}
-                    {{ _('From design to production, we offer comprehensive technical support.') }}
-                </p>
-                <div class="d-flex flex-wrap gap-3">
-                    <a href="#" class="btn btn-light btn-lg px-4">
-                        <i class="fas fa-play me-2"></i>{{ _('Get Started') }}
-                    </a>
-                    <a href="#" class="btn btn-outline-light btn-lg px-4">
-                        <i class="fas fa-info-circle me-2"></i>{{ _('Learn More') }}
-                    </a>
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 bg-deepNavy bg-circuit-pattern overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-deepNavy/90"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="lg:grid lg:grid-cols-12 lg:gap-12 items-center">
+                <div class="lg:col-span-6 mb-12 lg:mb-0">
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight mb-6">
+                        {{ _('PRECISION PARTS.') }}<br>
+                        <span class="text-cyberCyan bg-clip-text text-transparent bg-gradient-to-r from-cyberCyan to-blue-500">{{ _('GLOBAL LINK.') }}</span>
+                    </h1>
+                    <p class="text-xl text-quantumSilver mb-10 max-w-lg">
+                        {{ _('Your advanced supply chain partner for professional drone components. Connecting original manufacturers to global engineers with speed and reliability.') }}
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#featured-products" class="inline-flex items-center px-8 py-4 rounded-md bg-cyberCyan text-deepNavy font-bold text-lg transition-all duration-300 hover:shadow-neon hover:scale-105">
+                            {{ _('EXPLORE CATALOG') }}
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        </a>
+                        <a href="{{ url_for('main.contact') }}" class="inline-flex items-center px-8 py-4 rounded-md border-2 border-quantumSilver text-quantumSilver font-semibold text-lg transition-all duration-300 hover:text-cyberCyan hover:border-cyberCyan">
+                            {{ _('REQUEST A QUOTE') }}
+                        </a>
+                    </div>
+                </div>
+                <div class="lg:col-span-6 relative">
+                    <div class="relative z-10">
+                        <!-- Placeholder for Hero Image -->
+                        <div class="w-full h-64 lg:h-96 bg-darkCurrent/50 rounded-xl flex items-center justify-center border border-cyberCyan/30">
+                            <img src="{{ url_for('static', filename='images/hero-image.jpg') }}" alt="S220 Pro Hero Image Display" class="w-full h-full object-cover rounded-xl">
+                        </div>
+                    </div>
+                    <div class="absolute -inset-4 bg-cyberCyan/20 blur-3xl rounded-full -z-10 opacity-70 mix-blend-screen"></div>
                 </div>
             </div>
-            <div class="col-lg-6 text-center">
-                <i class="fas fa-cogs display-1 opacity-75"></i>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- 产品分类区域 -->
-<div class="container py-5">
-    <section id="infrared" class="category-section mb-5">
-        <div class="row text-center mb-4">
-            <div class="col">
-                <h2 class="fw-bold mb-3">{{ _('Infrared Drones') }}</h2>
-                <p class="text-muted">{{ _('Advanced infrared drone technology for thermal imaging applications') }}</p>
-            </div>
-        </div>
-        <div class="row g-4">
-            {% for product in products if product.category == 'Infrared Drones' %}
-            <div class="col-md-4">
-                <a href="{{ url_for('product_detail', product_id=product.product_id_no) }}" class="text-decoration-none">
-                    <div class="card h-100 border-0 shadow-sm">
-                        {% if product.image_url %}
-                        <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.get_translated_name(locale) }}" style="height: 240px; object-fit: cover;">
-                        {% else %}
-                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 240px;">
-                            <i class="fas fa-thermometer fa-3x text-primary opacity-50"></i>
-                        </div>
-                        {% endif %}
-                        <div class="card-body text-center p-4">
-                            <h5 class="card-title fw-bold">{{ product.get_translated_name(locale) }}</h5>
-                            <p class="card-text text-muted">{{ product.get_translated_description(locale) }}</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            {% else %}
-            <div class="col-12 text-center">
-                <p class="text-muted">{{ _('No infrared drones available.') }}</p>
-            </div>
-            {% endfor %}
         </div>
     </section>
 
-    <section id="cargo" class="category-section mb-5">
-        <div class="row text-center mb-4">
-            <div class="col">
-                <h2 class="fw-bold mb-3">{{ _('Cargo Drones') }}</h2>
-                <p class="text-muted">{{ _('Professional cargo drone solutions for various transportation needs') }}</p>
+    <!-- Dynamic Products Section (Tabbed Categories) -->
+    <section id="featured-products" class="py-20 bg-darkCurrent/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-base text-cyberCyan font-bold tracking-wide uppercase mb-2">{{ _('Our Fleet') }}</h2>
+                <p class="text-3xl font-extrabold text-white mb-8">{{ _('Featured Drones & Components') }}</p>
+                
+                <!-- Category Tabs -->
+                <div class="flex flex-wrap justify-center gap-4 mb-10" role="tablist">
+                    <button onclick="switchTab('infrared')" class="tab-btn active px-6 py-2 rounded-full border border-cyberCyan/30 text-white font-semibold hover:bg-cyberCyan/10 transition-all duration-300 focus:outline-none" data-target="infrared">
+                        {{ _('Infrared Drones') }}
+                    </button>
+                    <button onclick="switchTab('cargo')" class="tab-btn px-6 py-2 rounded-full border border-quantumSilver/30 text-quantumSilver font-semibold hover:border-cyberCyan/30 hover:text-white hover:bg-cyberCyan/10 transition-all duration-300 focus:outline-none" data-target="cargo">
+                        {{ _('Cargo Drones') }}
+                    </button>
+                    <button onclick="switchTab('spray')" class="tab-btn px-6 py-2 rounded-full border border-quantumSilver/30 text-quantumSilver font-semibold hover:border-cyberCyan/30 hover:text-white hover:bg-cyberCyan/10 transition-all duration-300 focus:outline-none" data-target="spray">
+                        {{ _('Spray Drones') }}
+                    </button>
+                    <button onclick="switchTab('payloads')" class="tab-btn px-6 py-2 rounded-full border border-quantumSilver/30 text-quantumSilver font-semibold hover:border-cyberCyan/30 hover:text-white hover:bg-cyberCyan/10 transition-all duration-300 focus:outline-none" data-target="payloads">
+                        {{ _('Payloads & Accessories') }}
+                    </button>
+                </div>
             </div>
-        </div>
-        <div class="row g-4">
-            {% for product in products if product.category == 'Cargo Drones' %}
-            <div class="col-md-4">
-                <a href="{{ url_for('product_detail', product_id=product.product_id_no) }}" class="text-decoration-none">
-                    <div class="card h-100 border-0 shadow-sm">
-                        {% if product.image_url %}
-                        <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.get_translated_name(locale) }}" style="height: 240px; object-fit: cover;">
+
+            <!-- Tab Contents -->
+            <div class="relative min-h-[400px]">
+                {% if featured_products %}
+                    {% for category_key, products in featured_products.items() %}
+                    <div id="tab-{{ category_key }}" class="tab-content {{ 'hidden' if not loop.first else '' }} transition-opacity duration-500">
+                        {% if products %}
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {% for product in products %}
+                            <div class="glass-card rounded-xl overflow-hidden hover:border-cyberCyan transition duration-300 group flex flex-col h-full">
+                                <div class="h-48 bg-deepNavy relative overflow-hidden">
+                                    {% if product.image_url %}
+                                        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+                                    {% else %}
+                                        <div class="w-full h-full flex items-center justify-center text-quantumSilver/30">
+                                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                        </div>
+                                    {% endif %}
+                                    <div class="absolute top-4 right-4 bg-deepNavy/80 backdrop-blur px-3 py-1 rounded text-xs font-bold text-cyberCyan border border-cyberCyan/30">
+                                        {{ product.category or 'PART' }}
+                                    </div>
+                                </div>
+                                <div class="p-6 flex-1 flex flex-col">
+                                    <h3 class="text-xl font-bold text-white mb-2">{{ product.name }}</h3>
+                                    <p class="text-quantumSilver text-sm mb-4 flex-1 line-clamp-3">
+                                        {{ product.description }}
+                                    </p>
+                                    <a href="{{ url_for('main.product_detail', product_id=product.id) }}" class="inline-block text-center w-full py-2 rounded border border-cyberCyan/30 text-cyberCyan hover:bg-cyberCyan hover:text-deepNavy transition font-semibold text-sm">
+                                        {{ _('VIEW SPECS') }}
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
                         {% else %}
-                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 240px;">
-                            <i class="fas fa-box fa-3x text-primary opacity-50"></i>
+                        <div class="text-center py-20 border border-dashed border-quantumSilver/20 rounded-xl">
+                            <p class="text-quantumSilver">{{ _('No products currently available in this category.') }}</p>
                         </div>
                         {% endif %}
-                        <div class="card-body text-center p-4">
-                            <h5 class="card-title fw-bold">{{ product.get_translated_name(locale) }}</h5>
-                            <p class="card-text text-muted">{{ product.get_translated_description(locale) }}</p>
-                        </div>
                     </div>
+                    {% endfor %}
+                {% elif products %}
+                    <!-- Fallback for generic products list (e.g. search results or products page) -->
+                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {% for product in products %}
+                        <div class="glass-card rounded-xl overflow-hidden hover:border-cyberCyan transition duration-300 group flex flex-col h-full">
+                            <!-- (Same product card structure as above) -->
+                             <div class="h-48 bg-deepNavy relative overflow-hidden">
+                                {% if product.image_url %}
+                                    <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-500">
+                                {% else %}
+                                    <div class="w-full h-full flex items-center justify-center text-quantumSilver/30">
+                                        <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                    </div>
+                                {% endif %}
+                                <div class="absolute top-4 right-4 bg-deepNavy/80 backdrop-blur px-3 py-1 rounded text-xs font-bold text-cyberCyan border border-cyberCyan/30">
+                                    {{ product.category or 'PART' }}
+                                </div>
+                            </div>
+                            <div class="p-6 flex-1 flex flex-col">
+                                <h3 class="text-xl font-bold text-white mb-2">{{ product.get_translated_name(locale) }}</h3>
+                                <p class="text-quantumSilver text-sm mb-4 flex-1 line-clamp-3">
+                                    {{ product.get_translated_description(locale) }}
+                                </p>
+                                <a href="{{ url_for('main.product_detail', product_id=product.id) }}" class="inline-block text-center w-full py-2 rounded border border-cyberCyan/30 text-cyberCyan hover:bg-cyberCyan hover:text-deepNavy transition font-semibold text-sm">
+                                    {{ _('VIEW SPECS') }}
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="mt-12 text-center">
+                <a href="{{ url_for('main.products_page') }}" class="inline-flex items-center text-cyberCyan font-bold hover:text-white transition">
+                    {{ _('View Full Catalog') }} <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                 </a>
             </div>
-            {% else %}
-            <div class="col-12 text-center">
-                <p class="text-muted">{{ _('No cargo drones available.') }}</p>
-            </div>
-            {% endfor %}
         </div>
     </section>
 
-    <section id="spray" class="category-section">
-        <div class="row text-center mb-4">
-            <div class="col">
-                <h2 class="fw-bold mb-3">{{ _('Spray Drones') }}</h2>
-                <p class="text-muted">{{ _('Efficient spray drones for agricultural and industrial applications') }}</p>
+    <!-- Why Choose Section -->
+    <section class="py-24 bg-deepNavy relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20">
+                <h2 class="text-base text-cyberCyan font-bold tracking-wide uppercase mb-3">{{ _('Why Choose partdro') }}</h2>
+                <p class="text-3xl lg:text-4xl font-extrabold text-white">{{ _('The Engine of Your Drone Business') }}</p>
             </div>
-        </div>
-        <div class="row g-4">
-            {% for product in products if product.category == 'Spray Drones' %}
-            <div class="col-md-4">
-                <a href="{{ url_for('product_detail', product_id=product.product_id_no) }}" class="text-decoration-none">
-                    <div class="card h-100 border-0 shadow-sm">
-                        {% if product.image_url %}
-                        <img src="{{ product.image_url }}" class="card-img-top" alt="{{ product.get_translated_name(locale) }}" style="height: 240px; object-fit: cover;">
-                        {% else %}
-                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 240px;">
-                            <i class="fas fa-spray-can fa-3x text-primary opacity-50"></i>
-                        </div>
-                        {% endif %}
-                        <div class="card-body text-center p-4">
-                            <h5 class="card-title fw-bold">{{ product.get_translated_name(locale) }}</h5>
-                            <p class="card-text text-muted">{{ product.get_translated_description(locale) }}</p>
-                        </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div class="glass-card p-10 rounded-2xl hover:border-cyberCyan/50 transition duration-500 group">
+                    <div class="w-16 h-16 bg-darkCurrent/80 rounded-xl flex items-center justify-center mb-8 group-hover:shadow-neon transition duration-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-cyberCyan" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     </div>
-                </a>
+                    <h3 class="text-2xl font-bold text-white mb-4 group-hover:text-cyberCyan transition">{{ _('Global Logistics Net') }}</h3>
+                    <p class="text-quantumSilver">{{ _('Streamlined international shipping from source to your doorstep. We navigate the complexities of cross-border component trade.') }}</p>
+                </div>
+
+                <div class="glass-card p-10 rounded-2xl hover:border-cyberCyan/50 transition duration-500 group">
+                    <div class="w-16 h-16 bg-darkCurrent/80 rounded-xl flex items-center justify-center mb-8 group-hover:shadow-neon transition duration-500">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-cyberCyan" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4 group-hover:text-cyberCyan transition">{{ _('OEM Certified Quality') }}</h3>
+                    <p class="text-quantumSilver">{{ _('Direct partnerships with original manufacturers like Fimi and GDU ensure every part is authentic and meets flight-grade standards.') }}</p>
+                </div>
+
+                <div class="glass-card p-10 rounded-2xl hover:border-cyberCyan/50 transition duration-500 group">
+                    <div class="w-16 h-16 bg-darkCurrent/80 rounded-xl flex items-center justify-center mb-8 group-hover:shadow-neon transition duration-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-cyberCyan" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4 group-hover:text-cyberCyan transition">{{ _('Technical Expertise') }}</h3>
+                    <p class="text-quantumSilver">{{ _('Not just a distributor. We provide specialized support for thermal imaging modules and flight control systems.') }}</p>
+                </div>
             </div>
-            {% else %}
-            <div class="col-12 text-center">
-                <p class="text-muted">{{ _('No spray drones available.') }}</p>
-            </div>
-            {% endfor %}
         </div>
     </section>
-</div>
 
-<!-- 统计数据 -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="row text-center">
-            <div class="col-md-3 mb-4">
-                <h3 class="display-4 fw-bold text-primary">5000+</h3>
-                <p class="text-muted">{{ _('Parts Types') }}</p>
-            </div>
-            <div class="col-md-3 mb-4">
-                <h3 class="display-4 fw-bold text-primary">1000+</h3>
-                <p class="text-muted">{{ _('Satisfied Customers') }}</p>
-            </div>
-            <div class="col-md-3 mb-4">
-                <h3 class="display-4 fw-bold text-primary">99.8%</h3>
-                <p class="text-muted">{{ _('Customer Satisfaction') }}</p>
-            </div>
-            <div class="col-md-3 mb-4">
-                <h3 class="display-4 fw-bold text-primary">24/7</h3>
-                <p class="text-muted">{{ _('Technical Support') }}</p>
-            </div>
+    <!-- Call to Action -->
+    <section class="py-24 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-darkCurrent to-deepNavy"></div>
+        <div class="absolute right-0 top-1/2 transform -translate-y-1/2 w-1/2 h-full bg-cyberCyan/10 blur-3xl mix-blend-screen"></div>
+        
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <h2 class="text-4xl font-extrabold text-white mb-8">{{ _('Ready to Optimize Your Supply Chain?') }}</h2>
+            <p class="text-xl text-quantumSilver mb-12">{{ _('Get instant access to pricing for bulk orders and hard-to-find components.') }}</p>
+            <a href="{{ url_for('main.contact') }}" class="inline-block px-10 py-5 rounded-md bg-cyberCyan text-deepNavy font-bold text-lg transition-all duration-300 hover:shadow-neon hover:scale-105">
+                {{ _('START YOUR INQUIRY') }}
+            </a>
         </div>
-    </div>
-</section>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function switchTab(tabId) {
+        // 1. Remove active state from all buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('border-cyberCyan/30', 'text-white', 'bg-cyberCyan/10');
+            btn.classList.add('border-quantumSilver/30', 'text-quantumSilver');
+            // Re-add hover effects base classes if needed, but the static classes handle it
+        });
+        
+        // 2. Add active state to clicked button
+        const activeBtn = document.querySelector(`.tab-btn[data-target="${tabId}"]`);
+        if (activeBtn) {
+            activeBtn.classList.remove('border-quantumSilver/30', 'text-quantumSilver');
+            activeBtn.classList.add('border-cyberCyan/30', 'text-white', 'bg-cyberCyan/10');
+        }
+
+        // 3. Hide all tab contents
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.add('hidden');
+        });
+
+        // 4. Show target tab content
+        const targetContent = document.getElementById(`tab-${tabId}`);
+        if (targetContent) {
+            targetContent.classList.remove('hidden');
+        }
+    }
+
+    // Initialize first tab as active style (if not set in HTML)
+    document.addEventListener('DOMContentLoaded', () => {
+        // Ensure the first button looks active
+        const firstBtn = document.querySelector('.tab-btn');
+        if (firstBtn && !firstBtn.classList.contains('text-white')) {
+            switchTab(firstBtn.dataset.target);
+        }
+    });
+</script>
 {% endblock %}

@@ -1,508 +1,573 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEBUG CONSOLE | Partdro</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
-    <!-- Bootstrap 5 (Dark Theme Compatible) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% extends "base.html" %}
+
+{% block title %}Debug Console - Partdro{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Custom Animations for Tech Feel */
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .cyber-spinner {
+        width: 50px; height: 50px;
+        border: 3px solid transparent;
+        border-top: 3px solid #00E5FF;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
     
-    <style>
-        :root {
-            --primary-color: #00f2ff; /* Cyber Blue */
-            --secondary-color: #2b6eff;
-            --bg-dark: #050505;
-            --bg-card: #121212;
-            --text-main: #ffffff;
-            --text-muted: #a0a0a0;
-            --border-color: rgba(255, 255, 255, 0.1);
-            --success-color: #00ff9d;
-            --error-color: #ff4d4d;
-        }
+    /* Tab Transitions */
+    .tab-content {
+        transition: opacity 0.3s ease-in-out;
+    }
+    
+    /* Custom Scrollbar for Code Preview */
+    .code-preview::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+    .code-preview::-webkit-scrollbar-track {
+        background: #001A4D; 
+    }
+    .code-preview::-webkit-scrollbar-thumb {
+        background: #00265F; 
+        border-radius: 4px;
+    }
+    .code-preview::-webkit-scrollbar-thumb:hover {
+        background: #00E5FF; 
+    }
+</style>
+{% endblock %}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            min-height: 100vh;
-            position: relative;
-        }
-
-        /* Tech Background Grid */
-        .tech-bg-grid {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .main-container {
-            position: relative;
-            z-index: 1;
-            padding-top: 40px;
-            padding-bottom: 80px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        h1, h2, h3, h4, h5 {
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        /* Custom Card Style */
-        .tech-card {
-            background: rgba(18, 18, 18, 0.8);
-            border: 1px solid var(--border-color);
-            backdrop-filter: blur(10px);
-            border-radius: 8px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .tech-card:hover {
-            box-shadow: 0 0 15px rgba(0, 242, 255, 0.15);
-            border-color: rgba(0, 242, 255, 0.3);
-        }
-
-        /* Form Controls */
-        .form-control, .form-select {
-            background-color: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 500;
-            font-size: 1.1rem;
-        }
-
-        .form-control:focus {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-color: var(--primary-color);
-            color: var(--text-main);
-            box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
-        }
-
-        .form-label {
-            color: var(--primary-color);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-        }
-
-        /* Buttons */
-        .btn-tech {
-            background: transparent;
-            border: 1px solid var(--primary-color);
-            color: var(--primary-color);
-            font-family: 'Orbitron', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 10px 20px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-tech:hover {
-            background: var(--primary-color);
-            color: #000;
-            box-shadow: 0 0 15px var(--primary-color);
-        }
-
-        .btn-tech-primary {
-            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
-            border: none;
-            color: #000;
-            font-weight: 700;
-        }
-
-        .btn-tech-primary:hover {
-            opacity: 0.9;
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
-            color: #000;
-        }
-
-        /* Status Indicators */
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 5px 15px;
-            border-radius: 4px;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
-            font-size: 1.1rem;
-            border: 1px solid transparent;
-        }
-
-        .status-ok {
-            background-color: rgba(0, 255, 157, 0.1);
-            color: var(--success-color);
-            border-color: var(--success-color);
-        }
-
-        .status-err {
-            background-color: rgba(255, 77, 77, 0.1);
-            color: var(--error-color);
-            border-color: var(--error-color);
-        }
-
-        /* Loading State */
-        .loading-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-        
-        .cyber-spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid transparent;
-            border-top: 3px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* Helpers */
-        .text-cyber { color: var(--primary-color) !important; }
-        .border-cyber { border-color: var(--primary-color) !important; }
-    </style>
-</head>
-<body>
-    <div class="tech-bg-grid"></div>
-
-    <div class="main-container">
-        <!-- Header Section -->
-        <div class="d-flex justify-content-between align-items-center mb-5">
-            <div>
-                <h1 class="display-4 text-cyber fw-bold mb-0">
-                    <i class="fas fa-terminal me-3"></i>DEBUG CONSOLE
-                </h1>
-                <p class="text-muted mt-2 mb-0" style="font-family: 'Rajdhani'; letter-spacing: 1px;">
-                    PARTDRO SYSTEM DIAGNOSTICS & DATA INJECTION
-                </p>
-            </div>
-            <div class="text-end">
-                <div class="status-badge {{ 'status-ok' if 'Connected' in supabase_status else 'status-err' }}">
-                    <i class="fas {{ 'fa-check-circle' if 'Connected' in supabase_status else 'fa-exclamation-triangle' }} me-2"></i>
-                    SUPABASE: {{ supabase_status }}
-                </div>
+{% block content %}
+<div class="container mx-auto px-4 py-12 relative z-10">
+    
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row justify-between items-center mb-10 border-b border-white/10 pb-6">
+        <div>
+            <h1 class="text-4xl font-bold text-cyberCyan tracking-wider mb-2">
+                <i class="fas fa-terminal mr-3"></i>DEBUG CONSOLE
+            </h1>
+            <p class="text-quantumSilver font-light tracking-widest text-sm uppercase">
+                Partdro System Diagnostics & Data Injection
+            </p>
+        </div>
+        <div class="mt-4 md:mt-0">
+            <div class="px-4 py-2 rounded border flex items-center gap-2 font-bold
+                {{ 'bg-green-500/10 border-green-500 text-green-400' if 'Connected' in supabase_status else 'bg-red-500/10 border-red-500 text-red-400' }}">
+                <i class="fas {{ 'fa-check-circle' if 'Connected' in supabase_status else 'fa-exclamation-triangle' }}"></i>
+                SUPABASE: {{ supabase_status }}
             </div>
         </div>
+    </div>
 
-        <!-- Tabs Navigation -->
-        <ul class="nav nav-tabs border-bottom-0 mb-4" id="debugTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active text-cyber bg-transparent border-0 fw-bold" id="single-tab" data-bs-toggle="tab" data-bs-target="#single" type="button" role="tab">
-                    <i class="fas fa-cube me-2"></i>SINGLE PRODUCT
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link text-muted bg-transparent border-0 fw-bold" id="csv-tab" data-bs-toggle="tab" data-bs-target="#csv" type="button" role="tab">
-                    <i class="fas fa-file-csv me-2"></i>BULK IMPORT (CSV)
-                </button>
-            </li>
-        </ul>
+    <!-- Tabs Navigation -->
+    <div class="flex space-x-1 mb-8 border-b border-white/10">
+        <button onclick="switchTab('single')" id="tab-btn-single" class="tab-btn px-6 py-3 font-bold tracking-wider text-sm transition-all duration-300 border-b-2 border-transparent hover:text-white text-cyberCyan border-cyberCyan">
+            <i class="fas fa-cube mr-2"></i>SINGLE PRODUCT
+        </button>
+        <button onclick="switchTab('csv')" id="tab-btn-csv" class="tab-btn px-6 py-3 font-bold tracking-wider text-sm transition-all duration-300 border-b-2 border-transparent text-quantumSilver hover:text-white">
+            <i class="fas fa-file-csv mr-2"></i>BULK IMPORT
+        </button>
+        <button onclick="switchTab('ai-builder')" id="tab-btn-ai-builder" class="tab-btn px-6 py-3 font-bold tracking-wider text-sm transition-all duration-300 border-b-2 border-transparent text-quantumSilver hover:text-white">
+            <i class="fas fa-magic mr-2"></i>AI LP BUILDER
+        </button>
+    </div>
 
-        <div class="tab-content" id="debugTabsContent">
-            <!-- Tab 1: Single Product (Existing Form) -->
-            <div class="tab-pane fade show active" id="single" role="tabpanel">
-                <form id="productForm">
-                    <!-- ... Existing Single Product Form Content ... -->
-                    <div class="row">
-                        <!-- Left Column: Base Info -->
-                        <div class="col-lg-5">
-                            <div class="tech-card h-100">
-                                <h4 class="mb-4 text-white"><i class="fas fa-cube me-2"></i>Product Identity</h4>
-                                
-                                <div class="mb-3">
-                                    <label class="form-label">Product ID (Slug)</label>
-                                    <input type="text" class="form-control" name="product_id_no" placeholder="e.g. s300" required>
-                                    <div class="form-text text-muted">Unique identifier used in URL (e.g. /product/s300)</div>
+    <!-- Tab Contents -->
+    <div id="tab-contents">
+        
+        <!-- Tab 1: Single Product -->
+        <div id="tab-single" class="tab-pane block opacity-100">
+            <form id="productForm">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Left Column: Base Info -->
+                    <div class="lg:col-span-5 space-y-6">
+                        <div class="glass-card rounded-xl p-6">
+                            <h4 class="text-xl text-white font-bold mb-6 flex items-center">
+                                <i class="fas fa-cube mr-3 text-cyberCyan"></i>Product Identity
+                            </h4>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-cyberCyan text-xs font-bold uppercase tracking-wider mb-2">Product ID (Slug)</label>
+                                    <input type="text" name="product_id_no" placeholder="e.g. s300" required
+                                        class="w-full bg-darkCurrent/50 border border-white/10 rounded px-4 py-3 text-white focus:border-cyberCyan focus:outline-none focus:ring-1 focus:ring-cyberCyan transition-all placeholder-gray-600">
+                                    <p class="text-xs text-quantumSilver mt-1">Unique identifier used in URL (e.g. /product/s300)</p>
                                 </div>
 
-                                <div class="row g-3 mb-3">
-                                    <div class="col-6">
-                                        <label class="form-label">Model</label>
-                                        <input type="text" class="form-control" name="model" placeholder="S300" required>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-cyberCyan text-xs font-bold uppercase tracking-wider mb-2">Model</label>
+                                        <input type="text" name="model" placeholder="S300" required
+                                            class="w-full bg-darkCurrent/50 border border-white/10 rounded px-4 py-3 text-white focus:border-cyberCyan focus:outline-none focus:ring-1 focus:ring-cyberCyan transition-all placeholder-gray-600">
                                     </div>
-                                    <div class="col-6">
-                                        <label class="form-label">Category ID</label>
-                                        <input type="number" class="form-control" name="category_id" value="1">
+                                    <div>
+                                        <label class="block text-cyberCyan text-xs font-bold uppercase tracking-wider mb-2">Category</label>
+                                        <div class="relative">
+                                            <select name="category_id" class="w-full bg-darkCurrent/50 border border-white/10 rounded px-4 py-3 text-white focus:border-cyberCyan focus:outline-none focus:ring-1 focus:ring-cyberCyan transition-all appearance-none">
+                                                <option value="1" class="bg-deepNavy text-white">Default (ID: 1)</option>
+                                                {% if categories %}
+                                                    {% for cat in categories %}
+                                                        <option value="{{ cat.id }}" class="bg-deepNavy text-white">{{ cat.name }} (ID: {{ cat.id }})</option>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </select>
+                                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white">
+                                                <i class="fas fa-chevron-down text-xs"></i>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label class="form-label">Landing Page Template</label>
-                                    <input type="text" class="form-control" name="landing_page" placeholder="e.g. s150_landing_page.html">
+                                <div>
+                                    <label class="block text-cyberCyan text-xs font-bold uppercase tracking-wider mb-2">Landing Page Template</label>
+                                    <input type="text" name="landing_page" placeholder="e.g. s150_landing_page.html"
+                                        class="w-full bg-darkCurrent/50 border border-white/10 rounded px-4 py-3 text-white focus:border-cyberCyan focus:outline-none focus:ring-1 focus:ring-cyberCyan transition-all placeholder-gray-600">
                                 </div>
 
-                                <div class="mb-3">
-                                    <label class="form-label">Product Image</label>
-                                    <input type="file" class="form-control" name="image_file" accept="image/*">
+                                <div>
+                                    <label class="block text-cyberCyan text-xs font-bold uppercase tracking-wider mb-2">Product Image</label>
+                                    <input type="file" name="image_file" accept="image/*"
+                                        class="w-full bg-darkCurrent/50 border border-white/10 rounded px-4 py-3 text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-cyberCyan/10 file:text-cyberCyan hover:file:bg-cyberCyan/20 transition-all">
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Right Column: Content & Translation -->
-                        <div class="col-lg-7">
-                            <div class="tech-card border-cyber">
-                                <div class="d-flex justify-content-between align-items-center mb-4">
-                                    <h4 class="mb-0 text-cyber"><i class="fas fa-language me-2"></i>Content & AI Translation</h4>
-                                    <span class="badge bg-dark border border-secondary text-muted">Powered by DeepSeek</span>
-                                </div>
+                    <!-- Right Column: Content & Translation -->
+                    <div class="lg:col-span-7 space-y-6">
+                        <div class="glass-card rounded-xl p-6 border border-cyberCyan/30">
+                            <div class="flex justify-between items-center mb-6">
+                                <h4 class="text-xl text-cyberCyan font-bold flex items-center">
+                                    <i class="fas fa-language mr-3"></i>Content & AI Translation
+                                </h4>
+                                <span class="px-3 py-1 bg-black/50 border border-white/10 rounded text-xs text-quantumSilver">Powered by DeepSeek</span>
+                            </div>
 
-                                <!-- English Source -->
-                                <div class="p-3 mb-4 rounded" style="background: rgba(0, 242, 255, 0.05); border: 1px dashed var(--primary-color);">
-                                    <h5 class="text-white mb-3">🇺🇸 English Source (Base)</h5>
-                                    <div class="mb-3">
-                                        <label class="form-label text-white">Product Name</label>
-                                        <input type="text" class="form-control" name="name" id="sourceName" required>
+                            <!-- English Source -->
+                            <div class="bg-cyan-500/5 border border-dashed border-cyberCyan/30 rounded-lg p-5 mb-6">
+                                <h5 class="text-white font-bold mb-4 flex items-center"><span class="mr-2">🇺🇸</span> English Source (Base)</h5>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-white/70 text-xs font-bold uppercase tracking-wider mb-2">Product Name</label>
+                                        <input type="text" name="name" id="sourceName" required
+                                            class="w-full bg-black/30 border border-white/10 rounded px-4 py-3 text-white focus:border-cyberCyan focus:outline-none transition-all">
                                         <input type="hidden" name="name_en" id="targetNameEn">
                                     </div>
-                                    <div class="mb-3">
-                                        <label class="form-label text-white">Description</label>
-                                        <textarea class="form-control" name="description" id="sourceDesc" rows="3"></textarea>
+                                    <div>
+                                        <label class="block text-white/70 text-xs font-bold uppercase tracking-wider mb-2">Description</label>
+                                        <textarea name="description" id="sourceDesc" rows="3"
+                                            class="w-full bg-black/30 border border-white/10 rounded px-4 py-3 text-white focus:border-cyberCyan focus:outline-none transition-all"></textarea>
                                         <input type="hidden" name="description_en" id="targetDescEn">
                                     </div>
-                                    <button type="button" class="btn btn-tech w-100" id="btnTranslate">
-                                        <i class="fas fa-magic me-2"></i>Generate Multi-Language Content
+                                    <button type="button" id="btnTranslate" 
+                                        class="w-full py-3 border border-cyberCyan text-cyberCyan hover:bg-cyberCyan hover:text-deepNavy transition-all font-bold uppercase tracking-wider rounded">
+                                        <i class="fas fa-magic mr-2"></i>Generate Multi-Language Content
                                     </button>
                                 </div>
+                            </div>
 
-                                <!-- Translations -->
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <h5 class="text-muted mb-2">🇯🇵 Japanese</h5>
-                                        <div class="mb-2">
-                                            <input type="text" class="form-control form-control-sm mb-1" name="name_ja" id="targetNameJa" placeholder="Name (JA)">
-                                            <textarea class="form-control form-control-sm" name="description_ja" id="targetDescJa" rows="3" placeholder="Description (JA)"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h5 class="text-muted mb-2">🇪🇸 Spanish</h5>
-                                        <div class="mb-2">
-                                            <input type="text" class="form-control form-control-sm mb-1" name="name_es" id="targetNameEs" placeholder="Name (ES)">
-                                            <textarea class="form-control form-control-sm" name="description_es" id="targetDescEs" rows="3" placeholder="Description (ES)"></textarea>
-                                        </div>
-                                    </div>
+                            <!-- Translations Grid -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Japanese -->
+                                <div>
+                                    <h5 class="text-quantumSilver font-bold mb-3 flex items-center text-sm"><span class="mr-2">🇯🇵</span> Japanese</h5>
+                                    <input type="text" name="name_ja" id="targetNameJa" placeholder="Name (JA)"
+                                        class="w-full bg-darkCurrent/50 border border-white/10 rounded px-3 py-2 text-sm text-white mb-2 focus:border-cyberCyan focus:outline-none">
+                                    <textarea name="description_ja" id="targetDescJa" rows="3" placeholder="Description (JA)"
+                                        class="w-full bg-darkCurrent/50 border border-white/10 rounded px-3 py-2 text-sm text-white focus:border-cyberCyan focus:outline-none"></textarea>
+                                </div>
+                                <!-- Spanish -->
+                                <div>
+                                    <h5 class="text-quantumSilver font-bold mb-3 flex items-center text-sm"><span class="mr-2">🇪🇸</span> Spanish</h5>
+                                    <input type="text" name="name_es" id="targetNameEs" placeholder="Name (ES)"
+                                        class="w-full bg-darkCurrent/50 border border-white/10 rounded px-3 py-2 text-sm text-white mb-2 focus:border-cyberCyan focus:outline-none">
+                                    <textarea name="description_es" id="targetDescEs" rows="3" placeholder="Description (ES)"
+                                        class="w-full bg-darkCurrent/50 border border-white/10 rounded px-3 py-2 text-sm text-white focus:border-cyberCyan focus:outline-none"></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Action Bar -->
-                    <div class="tech-card mt-3 text-center">
-                        <button type="submit" class="btn btn-tech-primary btn-lg px-5 py-3" id="btnSubmit">
-                            <i class="fas fa-rocket me-2"></i>DEPLOY TO DATABASE
+                <!-- Action Bar -->
+                <div class="mt-8 text-center">
+                    <button type="submit" class="px-10 py-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold text-lg tracking-widest uppercase rounded shadow-[0_0_20px_rgba(0,229,255,0.4)] hover:shadow-[0_0_30px_rgba(0,229,255,0.6)] hover:scale-105 transition-all transform duration-300">
+                        <i class="fas fa-rocket mr-2"></i>Deploy to Database
+                    </button>
+                    <p class="mt-3 text-quantumSilver text-sm font-mono">ACTION WILL UPSERT DATA TO SUPABASE 'PRODUCT' TABLE</p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tab 2: CSV Import -->
+        <div id="tab-csv" class="tab-pane hidden opacity-0">
+            <div class="flex justify-center">
+                <div class="w-full max-w-3xl glass-card rounded-xl p-10 text-center">
+                    <i class="fas fa-file-csv text-6xl text-cyberCyan mb-6"></i>
+                    <h3 class="text-2xl text-white font-bold mb-4">Batch Product Import</h3>
+                    <p class="text-quantumSilver mb-8 text-lg">
+                        Upload a CSV file to bulk insert or update products.<br>
+                        The file must include a header row matching database columns.
+                    </p>
+                    
+                    <div class="mb-10">
+                        <a href="/static/product_import_template.csv" download 
+                           class="inline-flex items-center px-6 py-3 border border-cyberCyan text-cyberCyan hover:bg-cyberCyan hover:text-deepNavy transition-all font-bold uppercase tracking-wider rounded">
+                            <i class="fas fa-download mr-2"></i>Download Template
+                        </a>
+                    </div>
+
+                    <form id="csvForm" class="text-left p-8 rounded-lg border border-dashed border-white/20 bg-white/5">
+                        <div class="mb-6">
+                            <label class="block text-cyberCyan text-sm font-bold uppercase tracking-wider mb-2">Select CSV File</label>
+                            <input type="file" name="csv_file" accept=".csv" required
+                                class="w-full bg-darkCurrent/50 border border-white/10 rounded px-4 py-3 text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-cyberCyan/10 file:text-cyberCyan hover:file:bg-cyberCyan/20 transition-all">
+                        </div>
+                        <button type="submit" class="w-full py-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold tracking-widest uppercase rounded shadow-[0_0_15px_rgba(0,229,255,0.3)] hover:opacity-90 transition-all">
+                            <i class="fas fa-upload mr-2"></i>Start Batch Import
                         </button>
-                        <div class="mt-2 text-muted small" style="font-family: 'Rajdhani'">
-                            ACTION WILL UPSERT DATA TO SUPABASE 'PRODUCT' TABLE
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
+        </div>
 
-            <!-- Tab 2: CSV Import -->
-            <div class="tab-pane fade" id="csv" role="tabpanel">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8">
-                        <div class="tech-card text-center py-5">
-                            <h3 class="text-white mb-4"><i class="fas fa-file-csv fa-2x text-cyber mb-3 d-block"></i>Batch Product Import</h3>
-                            <p class="text-muted mb-4" style="font-family: 'Rajdhani'; font-size: 1.1rem;">
-                                Upload a CSV file to bulk insert or update products.<br>
-                                The file must include a header row matching database columns.
-                            </p>
-                            
-                            <div class="d-flex justify-content-center gap-3 mb-5">
-                                <a href="/static/product_import_template.csv" class="btn btn-tech" download>
-                                    <i class="fas fa-download me-2"></i>Download Template
-                                </a>
+        <!-- Tab 3: AI Builder -->
+        <div id="tab-ai-builder" class="tab-pane hidden opacity-0">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Input Column -->
+                <div class="lg:col-span-5">
+                    <div class="glass-card rounded-xl p-6 h-full">
+                        <h4 class="text-xl text-cyberCyan font-bold mb-6 flex items-center">
+                            <i class="fas fa-edit mr-3"></i>Content Input
+                        </h4>
+                        
+                        <div class="mb-6">
+                            <label class="block text-cyberCyan text-xs font-bold uppercase tracking-wider mb-2">Target Product ID (Slug)</label>
+                            <input type="text" id="ai_product_id" placeholder="e.g. s150"
+                                class="w-full bg-darkCurrent/50 border border-white/10 rounded px-4 py-3 text-white focus:border-cyberCyan focus:outline-none focus:ring-1 focus:ring-cyberCyan transition-all">
+                            <p class="text-xs text-quantumSilver mt-1">The product you want to generate a landing page for.</p>
+                        </div>
+
+                        <hr class="border-white/10 my-6">
+
+                        <h5 class="text-white font-bold mb-4">Hero Section</h5>
+                        <div class="mb-6">
+                            <label class="block text-white/70 text-xs font-bold uppercase tracking-wider mb-2">Hero Video/Image URL</label>
+                            <input type="text" id="ai_hero_media" placeholder="https://..."
+                                class="w-full bg-darkCurrent/50 border border-white/10 rounded px-4 py-3 text-white focus:border-cyberCyan focus:outline-none transition-all">
+                        </div>
+
+                        <h5 class="text-white font-bold mb-4 mt-6">Features (Bullet Points)</h5>
+                        <div id="featuresList" class="space-y-4 mb-4">
+                            <!-- Feature Item Template -->
+                            <div class="feature-item p-4 rounded bg-white/5 border border-white/5">
+                                <input type="text" name="feat_title[]" placeholder="Feature Title" class="w-full bg-black/30 border border-white/10 rounded px-3 py-2 text-sm text-white mb-2 focus:border-cyberCyan focus:outline-none">
+                                <textarea name="feat_desc[]" rows="2" placeholder="Feature Description" class="w-full bg-black/30 border border-white/10 rounded px-3 py-2 text-sm text-white mb-2 focus:border-cyberCyan focus:outline-none"></textarea>
+                                <input type="text" name="feat_icon[]" placeholder="Icon Class (e.g. fas fa-bolt)" class="w-full bg-black/30 border border-white/10 rounded px-3 py-2 text-xs text-quantumSilver focus:border-cyberCyan focus:outline-none">
                             </div>
+                        </div>
+                        <button type="button" id="btnAddFeature" 
+                            class="w-full py-2 border border-white/20 text-white hover:bg-white/10 transition-all text-sm font-bold uppercase tracking-wider rounded">
+                            <i class="fas fa-plus mr-2"></i>Add Feature
+                        </button>
+                    </div>
+                </div>
 
-                            <form id="csvForm" class="text-start p-4 rounded" style="background: rgba(255,255,255,0.02); border: 1px dashed var(--border-color);">
-                                <div class="mb-4">
-                                    <label class="form-label">Select CSV File</label>
-                                    <input type="file" class="form-control form-control-lg" name="csv_file" accept=".csv" required>
-                                </div>
-                                <button type="submit" class="btn btn-tech-primary w-100 py-3">
-                                    <i class="fas fa-upload me-2"></i>START BATCH IMPORT
-                                </button>
-                            </form>
+                <!-- Preview Column -->
+                <div class="lg:col-span-7">
+                    <div class="glass-card rounded-xl p-6 h-full flex flex-col border border-cyberCyan/30">
+                        <h4 class="text-xl text-cyberCyan font-bold mb-6 flex items-center">
+                            <i class="fas fa-eye mr-3"></i>Generation & Preview
+                        </h4>
+                        
+                        <div class="flex-grow bg-black rounded-lg p-4 mb-6 border border-white/10 overflow-auto code-preview min-h-[400px]">
+                            <pre id="generatedCode" class="text-green-400 font-mono text-xs whitespace-pre-wrap">Generated HTML code will appear here...</pre>
+                        </div>
+
+                        <div class="flex gap-4">
+                            <button type="button" id="btnGenerateLP" class="flex-1 py-3 border border-cyberCyan text-cyberCyan hover:bg-cyberCyan hover:text-deepNavy transition-all font-bold uppercase tracking-wider rounded">
+                                <i class="fas fa-cog mr-2"></i>Generate HTML
+                            </button>
+                            <button type="button" id="btnSaveLP" class="flex-1 py-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90 transition-all font-bold uppercase tracking-wider rounded shadow-[0_0_15px_rgba(0,229,255,0.3)]">
+                                <i class="fas fa-save mr-2"></i>Save to Supabase
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Result Console -->
-        <div id="resultArea" class="tech-card mt-4 d-none">
-            <h4 class="text-white mb-3"><i class="fas fa-terminal me-2"></i>Operation Log</h4>
-            <div id="resultMsg" class="p-3 rounded mb-3" style="font-family: 'Courier New', monospace;"></div>
-            <div class="text-center">
-                <img id="uploadedImg" src="" class="img-fluid rounded border border-secondary d-none" style="max-height: 300px;">
-            </div>
+    </div>
+
+    <!-- Result Console -->
+    <div id="resultArea" class="glass-card rounded-xl p-6 mt-8 hidden">
+        <h4 class="text-white font-bold mb-4 flex items-center"><i class="fas fa-terminal mr-2"></i>Operation Log</h4>
+        <div id="resultMsg" class="p-4 rounded mb-4 font-mono text-sm"></div>
+        <div class="text-center">
+            <img id="uploadedImg" src="" class="max-h-64 rounded border border-white/20 mx-auto hidden">
         </div>
     </div>
 
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay d-none">
-        <div class="cyber-spinner mb-3"></div>
-        <h3 class="text-cyber" style="font-family: 'Orbitron'">PROCESSING...</h3>
-        <p class="text-white" id="loadingText" style="font-family: 'Rajdhani'">Connecting to Neural Network</p>
-    </div>
+</div>
 
-    <!-- Bootstrap 5 JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="fixed inset-0 bg-black/90 z-50 flex flex-col justify-center items-center hidden">
+    <div class="cyber-spinner mb-6"></div>
+    <h3 class="text-cyberCyan text-2xl font-bold tracking-widest mb-2 font-orbitron">PROCESSING...</h3>
+    <p class="text-white font-light tracking-wider" id="loadingText">Connecting to Neural Network</p>
+</div>
+{% endblock %}
 
-    <script>
-        const loading = {
-            show: (text) => {
-                document.getElementById('loadingText').innerText = text;
-                document.getElementById('loadingOverlay').classList.remove('d-none');
-            },
-            hide: () => {
-                document.getElementById('loadingOverlay').classList.add('d-none');
-            }
-        };
+{% block scripts %}
+<script>
+    // --- Tabs Logic ---
+    function switchTab(tabId) {
+        // Hide all contents
+        document.querySelectorAll('.tab-pane').forEach(el => {
+            el.classList.add('hidden', 'opacity-0');
+            el.classList.remove('block', 'opacity-100');
+        });
+        
+        // Reset all buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('text-cyberCyan', 'border-cyberCyan');
+            btn.classList.add('text-quantumSilver', 'border-transparent');
+        });
 
-        // Sync EN base to hidden fields
-        ['sourceName', 'sourceDesc'].forEach(id => {
-            document.getElementById(id).addEventListener('input', e => {
+        // Show target
+        const target = document.getElementById('tab-' + tabId);
+        target.classList.remove('hidden');
+        // Small delay for fade-in effect
+        setTimeout(() => {
+            target.classList.remove('opacity-0');
+            target.classList.add('opacity-100');
+        }, 10);
+
+        // Highlight button
+        const btn = document.getElementById('tab-btn-' + tabId);
+        btn.classList.remove('text-quantumSilver', 'border-transparent');
+        btn.classList.add('text-cyberCyan', 'border-cyberCyan');
+    }
+
+    // --- Loading Logic ---
+    const loading = {
+        show: (text) => {
+            document.getElementById('loadingText').innerText = text;
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+        },
+        hide: () => {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+        }
+    };
+
+    // --- Sync EN Fields ---
+    ['sourceName', 'sourceDesc'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener('input', e => {
                 const targetId = id === 'sourceName' ? 'targetNameEn' : 'targetDescEn';
                 document.getElementById(targetId).value = e.target.value;
             });
-        });
+        }
+    });
 
-        // AI Translate
-        document.getElementById('btnTranslate').addEventListener('click', async () => {
-            const name = document.getElementById('sourceName').value;
-            const desc = document.getElementById('sourceDesc').value;
+    // --- AI Translate ---
+    document.getElementById('btnTranslate').addEventListener('click', async () => {
+        const name = document.getElementById('sourceName').value;
+        const desc = document.getElementById('sourceDesc').value;
 
-            if (!name) {
-                alert("Please input English Name first.");
-                return;
-            }
+        if (!name) {
+            alert("Please input English Name first.");
+            return;
+        }
 
-            loading.show("DeepSeek AI is translating content...");
+        loading.show("DeepSeek AI is translating content...");
 
-            try {
-                const res = await fetch('/debug/translate', {
-                    method: 'POST',
-                    body: JSON.stringify({ name, description: desc }),
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                const json = await res.json();
-                
-                if (json.ok) {
-                    const data = json.data;
-                    document.getElementById('targetNameJa').value = data.name_ja || "";
-                    document.getElementById('targetDescJa').value = data.description_ja || "";
-                    document.getElementById('targetNameEs').value = data.name_es || "";
-                    document.getElementById('targetDescEs').value = data.description_es || "";
-                    
-                    // Sync EN
-                    document.getElementById('targetNameEn').value = name;
-                    document.getElementById('targetDescEn').value = desc;
-                } else {
-                    alert("AI Error: " + json.error);
-                }
-            } catch (e) {
-                alert("Network Error: " + e);
-            } finally {
-                loading.hide();
-            }
-        });
-
-        // Submit
-        document.getElementById('productForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const form = new FormData(e.target);
-            const resultArea = document.getElementById('resultArea');
-            const msgBox = document.getElementById('resultMsg');
-            const img = document.getElementById('uploadedImg');
+        try {
+            const res = await fetch('/debug/translate', {
+                method: 'POST',
+                body: JSON.stringify({ name, description: desc }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const json = await res.json();
             
-            loading.show("Uploading assets & Syncing database...");
-            resultArea.classList.add('d-none');
-            img.classList.add('d-none');
-
-            try {
-                const res = await fetch('/debug/upload_product', {
-                    method: 'POST',
-                    body: form
-                });
-                const json = await res.json();
+            if (json.ok) {
+                const data = json.data;
+                document.getElementById('targetNameJa').value = data.name_ja || "";
+                document.getElementById('targetDescJa').value = data.description_ja || "";
+                document.getElementById('targetNameEs').value = data.name_es || "";
+                document.getElementById('targetDescEs').value = data.description_es || "";
                 
-                resultArea.classList.remove('d-none');
-                
-                if (json.ok) {
-                    msgBox.className = "p-3 rounded bg-success bg-opacity-10 text-success border border-success";
-                    msgBox.innerHTML = `<strong>[SUCCESS]</strong> Product deployed successfully.<br>Image URL: ${json.image_url || 'N/A'}`;
-                    if (json.image_url) {
-                        img.src = json.image_url;
-                        img.classList.remove('d-none');
-                    }
-                } else {
-                    msgBox.className = "p-3 rounded bg-danger bg-opacity-10 text-danger border border-danger";
-                    msgBox.innerHTML = `<strong>[ERROR]</strong> ${json.error}`;
-                }
-            } catch (e) {
-                alert("System Error: " + e);
-            } finally {
-                loading.hide();
+                // Sync EN
+                document.getElementById('targetNameEn').value = name;
+                document.getElementById('targetDescEn').value = desc;
+            } else {
+                alert("AI Error: " + json.error);
             }
-        });
-        // Submit CSV Form
-        document.getElementById('csvForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const form = new FormData(e.target);
-            const resultArea = document.getElementById('resultArea');
-            const msgBox = document.getElementById('resultMsg');
-            const img = document.getElementById('uploadedImg');
+        } catch (e) {
+            alert("Network Error: " + e);
+        } finally {
+            loading.hide();
+        }
+    });
+
+    // --- Single Product Submit ---
+    document.getElementById('productForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        loading.show("Deploying product to Supabase...");
+        
+        const formData = new FormData(e.target);
+        try {
+            const res = await fetch('/debug/upload_product', {
+                method: 'POST',
+                body: formData
+            });
+            const json = await res.json();
             
-            loading.show("Parsing CSV & Batch Uploading...");
-            resultArea.classList.add('d-none');
-            img.classList.add('d-none');
-
-            try {
-                const res = await fetch('/debug/upload_csv', {
-                    method: 'POST',
-                    body: form
-                });
-                const json = await res.json();
-                
-                resultArea.classList.remove('d-none');
-                
-                if (json.ok) {
-                    msgBox.className = "p-3 rounded bg-success bg-opacity-10 text-success border border-success";
-                    msgBox.innerHTML = `<strong>[BATCH SUCCESS]</strong> ${json.message}`;
-                } else {
-                    msgBox.className = "p-3 rounded bg-danger bg-opacity-10 text-danger border border-danger";
-                    msgBox.innerHTML = `<strong>[ERROR]</strong> ${json.error}`;
+            const resultArea = document.getElementById('resultArea');
+            const resultMsg = document.getElementById('resultMsg');
+            const uploadedImg = document.getElementById('uploadedImg');
+            
+            resultArea.classList.remove('hidden');
+            if (json.ok) {
+                resultMsg.className = "p-4 rounded bg-green-500/10 text-green-400 border border-green-500";
+                resultMsg.innerHTML = `<strong>[SUCCESS]</strong> Product deployed successfully.<br>Image URL: ${json.image_url || 'N/A'}`;
+                if (json.image_url) {
+                    uploadedImg.src = json.image_url;
+                    uploadedImg.classList.remove('hidden');
                 }
-            } catch (e) {
-                alert("System Error: " + e);
-            } finally {
-                loading.hide();
+                e.target.reset();
+            } else {
+                resultMsg.className = "p-4 rounded bg-red-500/10 text-red-400 border border-red-500";
+                resultMsg.innerHTML = `<strong>[ERROR]</strong> ${json.error}`;
+                uploadedImg.classList.add('hidden');
             }
-        });
-    </script>
-</body>
-</html>
+            resultArea.scrollIntoView({ behavior: 'smooth' });
+        } catch (err) {
+            alert("Upload Failed: " + err);
+        } finally {
+            loading.hide();
+        }
+    });
+
+    // --- CSV Import Submit ---
+    document.getElementById('csvForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        loading.show("Processing Batch Import...");
+        
+        const formData = new FormData(e.target);
+        try {
+            const res = await fetch('/debug/upload_csv', {
+                method: 'POST',
+                body: formData
+            });
+            const json = await res.json();
+            
+            const resultArea = document.getElementById('resultArea');
+            const resultMsg = document.getElementById('resultMsg');
+            const uploadedImg = document.getElementById('uploadedImg');
+            
+            resultArea.classList.remove('hidden');
+            uploadedImg.classList.add('hidden'); // No image for CSV
+            
+            if (json.ok) {
+                resultMsg.className = "p-4 rounded bg-green-500/10 text-green-400 border border-green-500";
+                resultMsg.innerHTML = `<strong>[SUCCESS]</strong> ${json.message}`;
+                e.target.reset();
+            } else {
+                resultMsg.className = "p-4 rounded bg-red-500/10 text-red-400 border border-red-500";
+                resultMsg.innerHTML = `<strong>[ERROR]</strong> ${json.error}`;
+            }
+            resultArea.scrollIntoView({ behavior: 'smooth' });
+        } catch (err) {
+            alert("Import Failed: " + err);
+        } finally {
+            loading.hide();
+        }
+    });
+
+    // --- AI Builder Logic ---
+    document.getElementById('btnAddFeature').addEventListener('click', () => {
+        const list = document.getElementById('featuresList');
+        const item = document.createElement('div');
+        item.className = 'feature-item p-4 rounded bg-white/5 border border-white/5 mb-4';
+        item.innerHTML = `
+            <input type="text" name="feat_title[]" placeholder="Feature Title" class="w-full bg-black/30 border border-white/10 rounded px-3 py-2 text-sm text-white mb-2 focus:border-cyberCyan focus:outline-none">
+            <textarea name="feat_desc[]" rows="2" placeholder="Feature Description" class="w-full bg-black/30 border border-white/10 rounded px-3 py-2 text-sm text-white mb-2 focus:border-cyberCyan focus:outline-none"></textarea>
+            <input type="text" name="feat_icon[]" placeholder="Icon Class (e.g. fas fa-bolt)" class="w-full bg-black/30 border border-white/10 rounded px-3 py-2 text-xs text-quantumSilver focus:border-cyberCyan focus:outline-none">
+            <button type="button" class="mt-2 text-red-400 text-xs hover:text-red-300 uppercase font-bold" onclick="this.parentElement.remove()">
+                <i class="fas fa-trash mr-1"></i>Remove
+            </button>
+        `;
+        list.appendChild(item);
+    });
+
+    document.getElementById('btnGenerateLP').addEventListener('click', async () => {
+        const productId = document.getElementById('ai_product_id').value;
+        const heroMedia = document.getElementById('ai_hero_media').value;
+        
+        if (!productId) { alert("Please input Target Product ID"); return; }
+
+        const features = [];
+        const titles = document.getElementsByName('feat_title[]');
+        const descs = document.getElementsByName('feat_desc[]');
+        const icons = document.getElementsByName('feat_icon[]');
+        
+        for(let i=0; i<titles.length; i++) {
+            features.push({
+                title: titles[i].value,
+                desc: descs[i].value,
+                icon: icons[i].value
+            });
+        }
+
+        loading.show("Generating HTML content...");
+        try {
+            const res = await fetch('/debug/generate-lp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ productId, heroMedia, features })
+            });
+            const json = await res.json();
+            if (json.ok) {
+                document.getElementById('generatedCode').innerText = json.html;
+            } else {
+                alert("Generation Error: " + json.error);
+            }
+        } catch (e) {
+            alert("Network Error: " + e);
+        } finally {
+            loading.hide();
+        }
+    });
+
+    document.getElementById('btnSaveLP').addEventListener('click', async () => {
+        const productId = document.getElementById('ai_product_id').value;
+        const html = document.getElementById('generatedCode').innerText;
+        
+        if (!productId || html.includes('Generated HTML code')) {
+            alert("Please generate HTML first.");
+            return;
+        }
+
+        loading.show("Saving to Supabase...");
+        try {
+            const res = await fetch('/debug/save-lp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ productId, html })
+            });
+            const json = await res.json();
+            if (json.ok) {
+                alert("Landing Page saved successfully!");
+            } else {
+                alert("Save Error: " + json.error);
+            }
+        } catch (e) {
+            alert("Network Error: " + e);
+        } finally {
+            loading.hide();
+        }
+    });
+</script>
+{% endblock %}

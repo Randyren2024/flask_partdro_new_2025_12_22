@@ -1,60 +1,52 @@
-<!-- 导航栏 -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
-    <div class="container">
-        <!-- 品牌标识 -->
-        <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
-            <i class="fas fa-cogs me-2"></i>
-            <strong>Partdro</strong>
-        </a>
+<nav class="bg-deepNavy/90 backdrop-blur-md fixed w-full z-50 border-b border-cyberCyan/20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-20 items-center">
+            <!-- Logo -->
+            <div class="flex-shrink-0 flex items-center space-x-3">
+                <a href="{{ url_for('main.index') }}">
+                    <img class="h-10 w-auto" src="{{ url_for('static', filename='images/logo.svg') }}" alt="partdro">
+                </a>
+                <span class="text-white text-xl font-bold tracking-wide">Partdro</span>
+            </div>
 
-        <!-- 移动端汉堡菜单按钮 -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- 导航菜单 -->
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('index') }}">
-                        <i class="fas fa-home me-1"></i>{{ _('Home') }}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('products_page') }}">
-                        <i class="fas fa-box me-1"></i>{{ _('Products') }}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-info-circle me-1"></i>{{ _('About Us') }}
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-envelope me-1"></i>{{ _('Contact Us') }}
-                    </a>
-                </li>
-            </ul>
-
-            <!-- 右侧功能区域 -->
-            <div class="d-flex">
-                <div class="input-group me-2" style="max-width: 300px;">
-                    <input type="text" class="form-control" placeholder="{{ _('Search...') }}">
-                    <a href="#" class="btn btn-light">
-                        <i class="fas fa-search"></i>
-                    </a>
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex space-x-10 items-center">
+                <a href="{{ url_for('main.index') }}" class="text-white font-semibold hover:text-cyberCyan transition duration-300">{{ _('Home') }}</a>
+                <a href="{{ url_for('main.about') }}" class="text-quantumSilver hover:text-cyberCyan transition duration-300">{{ _('About Us') }}</a>
+                <a href="{{ url_for('main.contact') }}" class="text-quantumSilver hover:text-cyberCyan transition duration-300">{{ _('Contact') }}</a>
+                <a href="{{ url_for('main.privacy_policy') }}" class="text-quantumSilver hover:text-cyberCyan transition">Privacy Policy</a>
+                <a href="{{ url_for('main.terms_and_conditions') }}" class="text-quantumSilver hover:text-cyberCyan transition">Terms & Conditions</a>
+                <!-- Language Switcher -->
+                <div class="relative group">
+                    <button class="flex items-center text-quantumSilver hover:text-cyberCyan focus:outline-none transition duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span class="uppercase">{{ get_locale() }}</span>
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <!-- Dropdown Menu -->
+                    <div class="absolute right-0 mt-2 w-32 bg-deepNavy border border-cyberCyan/20 rounded-md shadow-neon opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-right z-50">
+                        <div class="py-1">
+                            <a href="{{ url_for('main.set_lang', lang='en') }}" class="block px-4 py-2 text-sm text-quantumSilver hover:bg-cyberCyan/10 hover:text-cyberCyan">English</a>
+                            <a href="{{ url_for('main.set_lang', lang='zh_CN') }}" class="block px-4 py-2 text-sm text-quantumSilver hover:bg-cyberCyan/10 hover:text-cyberCyan">简体中文</a>
+                            <a href="{{ url_for('main.set_lang', lang='ja') }}" class="block px-4 py-2 text-sm text-quantumSilver hover:bg-cyberCyan/10 hover:text-cyberCyan">日本語</a>
+                            <a href="{{ url_for('main.set_lang', lang='es') }}" class="block px-4 py-2 text-sm text-quantumSilver hover:bg-cyberCyan/10 hover:text-cyberCyan">Español</a>
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                <div class="dropdown">
-                    <a class="btn btn-light dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        {{ _('Language') }}
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="{{ url_for('set_lang', lang='en') }}">English</a></li>
-                        <li><a class="dropdown-item" href="{{ url_for('set_lang', lang='zh_CN') }}">简体中文</a></li>
-                    </ul>
-                </div>
+            <!-- Mobile Menu Button -->
+            <div class="md:hidden flex items-center gap-4">
+                 <!-- Mobile Language Toggle (Simple) -->
+                 <a href="{{ url_for('main.set_lang', lang='en' if get_locale() != 'en' else 'zh_CN') }}" class="text-quantumSilver text-sm font-bold border border-quantumSilver/30 rounded px-2 py-1">
+                    {{ get_locale()|upper }}
+                </a>
+                
+                <button class="text-quantumSilver hover:text-cyberCyan">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
             </div>
         </div>
     </div>

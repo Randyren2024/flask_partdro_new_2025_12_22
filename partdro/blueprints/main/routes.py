@@ -28,12 +28,16 @@ def schema_health():
 @main_bp.route("/")
 def index():
     locale = request.args.get("locale", "en")
-    # 可按分类读取示例数据用于首页分区展示
-    infrared = list_products(category="Infrared Drones", page=1, page_size=6)
-    cargo = list_products(category="Cargo Drones", page=1, page_size=6)
-    spray = list_products(category="Spray Drones", page=1, page_size=6)
-    products = infrared + cargo + spray
-    return render_template("index.html", products=products, locale=locale)
+    
+    # 获取四大分类数据 (每类取前6个)
+    featured_products = {
+        "infrared": list_products(category="Infrared Drones", page=1, page_size=6),
+        "cargo": list_products(category="Cargo Drones", page=1, page_size=6),
+        "spray": list_products(category="Spray Drones", page=1, page_size=6),
+        "payloads": list_products(category="Payloads & Accessories", page=1, page_size=6)
+    }
+    
+    return render_template("index.html", featured_products=featured_products, locale=locale)
 
 @main_bp.route("/products")
 def products_page():
@@ -42,7 +46,7 @@ def products_page():
     page = int(request.args.get("page", 1))
     page_size = int(request.args.get("page_size", 20))
     products = list_products(category=category, page=page, page_size=page_size)
-    return render_template("index.html", products=products, locale=locale)
+    return render_template("index.html", products=products, locale=locale) # 注意：这里复用 index.html，但 logic 可能需要调整，或者创建独立的 products.html。目前保持原样，只关注首页重构。
 
 _LP_TEMPLATE_MAP: Dict[str, str] = {
     "s150": "s150_landing_page.html",
@@ -53,33 +57,75 @@ _LP_TEMPLATE_MAP: Dict[str, str] = {
     "gdu_s200_by_gemini.html": "test_s200_by_gemini.html",
 }
 
-@main_bp.route("/product/<int:product_id>")
-def product_detail(product_id: int):
+@main_bp.route("/api/apply-partner", methods=["POST"])
+def apply_partner():
+    data = request.json
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+        
+    try:
+        # 准备要写入的数据
+        record = {
+            "name": data.get("name"),
+            "email": data.get("email"),
+            "company": data.get("company"),
+            "phone": data.get("phone"),
+            "country": data.get("country"),
+            "industries": data.get("industries", []),  # 数组
+            "message": data.get("message")
+        }
+        
+        # 写入 Supabase
+        extensions.supabase.table("partner_applications").insert(record).execute()
+        
+        return jsonify({"success": True, "message": "Application submitted successfully"})
+    except Exception as e:
+        print(f"Error submitting application: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@main_bp.route("/product/<product_id>")
+def product_detail(product_id):
     locale = request.args.get("locale", "en")
     product = get_product(product_id)
     if not product:
         abort(404)
     lp = product.landing_page or ""
+    
+    # 1. 检查硬编码映射
     template_name = _LP_TEMPLATE_MAP.get(lp)
+    
+    # 2. 如果不在映射中，且看起来像是一个模板路径（以 .html 结尾），则尝试直接渲染
+    if not template_name and lp.endswith(".html"):
+        template_name = lp
+        
     if not template_name:
-        # 未配置映射时，降级返回首页或 404
-        # 这里返回首页以便后续前端完善通用详情模板
+        # 未配置映射且不是直接路径时，降级返回首页
         return render_template("index.html", products=[product], locale=locale)
-    return render_template(template_name, product=product, locale=locale)
+        
+    try:
+        return render_template(template_name, product=product, locale=locale)
+    except Exception as e:
+        # 如果模板文件不存在或其他渲染错误，降级
+        print(f"Template Error for {template_name}: {e}")
+        return render_template("index.html", products=[product], locale=locale)
 
 # 基础静态页（占位）
 
 @main_bp.route("/about")
 def about():
-    return jsonify({"page": _("about")})
+    return render_template("about.html")
 
-@main_bp.route("/terms-and-services")
-def terms_and_services():
-    return jsonify({"page": _("terms_and_services")})
+@main_bp.route("/terms-and-conditions")
+def terms_and_conditions():
+    return render_template("terms_and_conditions.html")
 
 @main_bp.route("/privacy-policy")
 def privacy_policy():
-    return jsonify({"page": _("privacy_policy")})
+    return render_template("privacy_policy.html")
+
+@main_bp.route("/contact")
+def contact():
+    return render_template("contact.html")
 
 # 产品健康检查：验证 products 表与 landing_page 字段可读
 

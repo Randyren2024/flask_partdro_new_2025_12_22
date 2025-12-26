@@ -1,10 +1,19 @@
 from flask import Blueprint, render_template, request, jsonify, current_app, abort
 from partdro.services.ai import translate_product_info
 from partdro.services.storage import upload, get_public_url
+from partdro.services.lp_generator import generate_lp_html
 import partdro.extensions as extensions
 import traceback
 
-debug_bp = Blueprint("debug", __name__, url_prefix="/debug")
+import os
+
+# Point to the root 'templates' directory
+# routes.py is in partdro/blueprints/debug/
+# templates is in templates/ (root)
+# So we need to go up 3 levels: ../../../templates
+template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', 'templates'))
+
+debug_bp = Blueprint("debug", __name__, url_prefix="/debug", template_folder=template_dir)
 
 @debug_bp.before_request
 def restrict_access():
@@ -28,13 +37,32 @@ def restrict_access():
 def index():
     # Check supabase connection
     supabase_status = "Unknown"
+    categories = []
+    
     try:
+        # Check connection
         extensions.supabase.table("product").select("id").limit(1).execute()
         supabase_status = "Connected"
+        
+        # Fetch categories for dropdown
+        # Assuming there is a 'category' table or we just fetch distinct from products if not
+        # Let's try to fetch from 'category' table first, if it exists.
+        # Based on previous context, user mentioned 'category_id' in product table.
+        # Let's assume a 'category' table exists with id, name.
+        # If not, we might need to fallback or just use hardcoded common ones.
+        
+        # Safe try to fetch categories
+        try:
+            res = extensions.supabase.table("category").select("id, name").execute()
+            categories = res.data if res.data else []
+        except:
+            # Fallback if category table missing or other issue
+            categories = []
+            
     except Exception as e:
         supabase_status = f"Error: {str(e)}"
         
-    return render_template("debug.html", supabase_status=supabase_status)
+    return render_template("debug.html", supabase_status=supabase_status, categories=categories)
 
 @debug_bp.route("/translate", methods=["POST"])
 def translate():
@@ -139,3 +167,52 @@ def upload_csv():
     except Exception as e:
         traceback.print_exc()
         return jsonify({"ok": False, "error": f"CSV processing failed: {str(e)}"}), 500
+
+@debug_bp.route("/generate-lp", methods=["POST"])
+def generate_lp():
+    data = request.get_json(force=True) or {}
+    product_id = data.get("productId")
+    hero_media = data.get("heroMedia")
+    features = data.get("features", [])
+    
+    if not product_id:
+        return jsonify({"ok": False, "error": "Product ID is required"}), 400
+        
+    try:
+        # Try to get the product name from Supabase for a better title
+        res = extensions.supabase.table("product").select("name").eq("product_id_no", product_id).execute()
+        product_name = res.data[0].get("name") if res.data else product_id
+        
+        html = generate_lp_html(product_name, hero_media, features)
+        return jsonify({"ok": True, "html": html})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+@debug_bp.route("/save-lp", methods=["POST"])
+def save_lp():
+    data = request.get_json(force=True) or {}
+    product_id = data.get("productId")
+    html = data.get("html")
+    
+    if not product_id or not html:
+        return jsonify({"ok": False, "error": "Missing product_id or html"}), 400
+        
+    try:
+        # 1. Save HTML to file
+        filename = f"generated_{product_id}.html"
+        # Ensure 'templates/generated' directory exists
+        gen_dir = os.path.join(template_dir, "generated")
+        if not os.path.exists(gen_dir):
+            os.makedirs(gen_dir)
+            
+        file_path = os.path.join(gen_dir, filename)
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(html)
+            
+        # 2. Update Supabase
+        # We set landing_page to the relative path within templates
+        extensions.supabase.table("product").update({"landing_page": f"generated/{filename}"}).eq("product_id_no", product_id).execute()
+        
+        return jsonify({"ok": True, "message": f"Saved to {filename} and updated database"})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500

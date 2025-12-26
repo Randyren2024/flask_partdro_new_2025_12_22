@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | partdro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        deepNavy: '#001A4D', darkCurrent: '#00265F', cyberCyan: '#00E5FF', quantumSilver: '#C0C5CE',
+                    },
+                    fontFamily: { sans: ['Montserrat', 'sans-serif'] },
+                    boxShadow: { 'neon': '0 0 15px rgba(0, 229, 255, 0.5), 0 0 5px rgba(0, 229, 255, 0.3)' }
+                }
+            }
+        }
+    </script>
+    <style>
+        .bg-circuit-pattern { background-image: url('path/to/your/dark-circuit-pattern.png'); background-repeat: repeat; background-blend-mode: overlay; }
+        .glass-card { background: rgba(0, 38, 95, 0.6); backdrop-filter: blur(10px); border: 1px solid rgba(0, 229, 255, 0.1); }
+        /* 表单输入框聚焦样式 */
+        .tech-input:focus {
+            border-color: #00E5FF;
+            box-shadow: 0 0 8px rgba(0, 229, 255, 0.3);
+            outline: none;
+        }
+    </style>
+</head>
+<body class="bg-deepNavy text-quantumSilver font-sans leading-relaxed">
+
+    <nav class="bg-deepNavy/90 backdrop-blur-md fixed w-full z-50 border-b border-cyberCyan/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <img class="h-10 w-auto" src="path/to/your/white-logo.png" alt="partdro">
+                </div>
+                <div class="hidden md:flex space-x-10">
+                    <a href="index.html" class="text-quantumSilver hover:text-cyberCyan transition duration-300">Home</a>
+                    <a href="about.html" class="text-quantumSilver hover:text-cyberCyan transition duration-300">About Us</a>
+                    <a href="contact.html" class="text-white font-semibold border-b-2 border-cyberCyan transition duration-300">Contact</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="relative pt-32 pb-16 bg-deepNavy bg-circuit-pattern overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-deepNavy/95"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+             <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+                Get in <span class="text-cyberCyan">Touch</span>
+            </h1>
+            <p class="text-xl text-quantumSilver mt-6 max-w-2xl mx-auto">
+                Need a specific part or looking for a bulk quote? Our technical team is ready to assist.
+            </p>
+        </div>
+    </section>
+
+    <section class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                
+                <div class="glass-card p-10 rounded-3xl">
+                    <h2 class="text-2xl font-bold text-white mb-8">Send us a Message</h2>
+                    <form action="#" method="POST" class="space-y-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label for="first-name" class="block text-sm font-medium text-quantumSilver mb-2">First Name</label>
+                                <input type="text" name="first-name" id="first-name" autocomplete="given-name" class="tech-input w-full bg-darkCurrent/50 border border-darkCurrent rounded-md py-3 px-4 text-white placeholder-gray-500 transition duration-300">
+                            </div>
+                            <div>
+                                <label for="last-name" class="block text-sm font-medium text-quantumSilver mb-2">Last Name</label>
+                                <input type="text" name="last-name" id="last-name" autocomplete="family-name" class="tech-input w-full bg-darkCurrent/50 border border-darkCurrent rounded-md py-3 px-4 text-white placeholder-gray-500 transition duration-300">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-quantumSilver mb-2">Email</label>
+                            <input type="email" name="email" id="email" autocomplete="email" class="tech-input w-full bg-darkCurrent/50 border border-darkCurrent rounded-md py-3 px-4 text-white placeholder-gray-500 transition duration-300">
+                        </div>
+                        <div>
+                            <label for="company" class="block text-sm font-medium text-quantumSilver mb-2">Company / Organization</label>
+                            <input type="text" name="company" id="company" class="tech-input w-full bg-darkCurrent/50 border border-darkCurrent rounded-md py-3 px-4 text-white placeholder-gray-500 transition duration-300">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-quantumSilver mb-2">How can we help? (e.g., Part Number, Drone Model)</label>
+                            <textarea id="message" name="message" rows="5" class="tech-input w-full bg-darkCurrent/50 border border-darkCurrent rounded-md py-3 px-4 text-white placeholder-gray-500 transition duration-300"></textarea>
+                        </div>
+                        <div>
+                            <button type="submit" class="w-full inline-flex justify-center items-center px-8 py-4 rounded-md bg-cyberCyan text-deepNavy font-bold text-lg transition-all duration-300 hover:shadow-neon hover:scale-[1.02]">
+                                SEND INQUIRY
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="space-y-10 lg:pt-10">
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-6">Other ways to connect</h2>
+                        <p class="text-quantumSilver mb-10">We prioritize B2B inquiries and technical consultations. Reach out directly for urgent sourcing needs.</p>
+                    </div>
+
+                    <div class="glass-card p-8 rounded-2xl flex items-start">
+                        <div class="flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-cyberCyan" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                        </div>
+                        <div class="ml-6">
+                            <h3 class="text-lg font-bold text-white">Email Support</h3>
+                            <p class="text-quantumSilver mt-2">General: info@partdro.com</p>
+                            <p class="text-cyberCyan mt-1 font-semibold">Sales: sales@partdro.com</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-8 rounded-2xl flex items-start">
+                        <div class="flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-cyberCyan" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                        </div>
+                        <div class="ml-6">
+                            <h3 class="text-lg font-bold text-white">Global Headquarters</h3>
+                            <p class="text-quantumSilver mt-2">
+                                [Insert Your Business Address]<br>
+                                [City, State, Zip]<br>
+                                [Country]
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-deepNavy border-t border-cyberCyan/10 pt-20 pb-10 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-quantumSilver">
+             <p>© 2024 partdro. All rights reserved. (Footer placeholder)</p>
+        </div>
+    </footer>
+</body>
+</html>

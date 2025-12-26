@@ -1,788 +1,338 @@
 {% extends "base.html" %}
 
-{% block title %}{{ product.get_translated_name(locale) if product else _('S150 Transport Drone - 150kg Heavy Payload, The New Era of Aerial Logistics') }}{% endblock %}
+{% block title %}{{ product.get_translated_name(get_locale()) }} - Partdro{% endblock %}
+{% block meta_description %}{{ product.get_translated_description(get_locale()) }}{% endblock %}
 
-{% block content %}
-    
+{% block extra_css %}
 <style>
-    /* Custom styles for S150 landing page */
-    .hero-section {
-        background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('http://1303876058.vod-qcloud.com/dcabf752vodsh1303876058/6ee2b0975145403699138397984/bz4gr7byR64A.png');
-        background-position: center center;
-        background-size: cover;
+    /* S150 Specific Cyberpunk Styles */
+    :root {
+        --s150-primary: #00f2ff;
+        --s150-bg: #050505;
+    }
+
+    .hero-wrapper {
         position: relative;
-        overflow: hidden;
-    }
-    
-    .hero-section::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -50%;
+        height: 100vh;
         width: 100%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-        background-size: 20px 20px;
-        animation: float 20s infinite linear;
-    }
-    
-    @keyframes float {
-        0% {
-            transform: translateY(0px) rotate(0deg);
-        }
-        50% {
-            transform: translateY(-20px) rotate(180deg);
-        }
-        100% {
-            transform: translateY(0px) rotate(360deg);
-        }
-    }
-    
-    .gallery-img {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .gallery-img:hover {
-        transform: scale(1.05);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-        z-index: 10;
-    }
-    
-    .gemini-spinner {
-        border: 4px solid rgba(0, 0, 0, 0.1);
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        border-left-color: #78c2ad;
-        animation: spin 1s ease infinite;
-    }
-    
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
+    .hero-video {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        object-fit: cover;
+        z-index: -1;
+        opacity: 0.6;
+        filter: contrast(1.2) brightness(0.8);
+    }
 
-    .card {
+    .hero-overlay {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(to bottom, rgba(5,5,5,0.3), rgba(5,5,5,0.9));
+        z-index: 0;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        max-width: 900px;
+        padding: 0 20px;
+    }
+
+    .glitch-title {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 5rem;
+        font-weight: 900;
+        color: #fff;
+        text-transform: uppercase;
+        text-shadow: 2px 2px var(--s150-primary), -1px -1px #ff00cc;
+        animation: glitch 3s infinite;
+    }
+
+    @keyframes glitch {
+        0% { text-shadow: 2px 2px var(--s150-primary), -1px -1px #ff00cc; }
+        2% { text-shadow: -2px -2px var(--s150-primary), 1px 1px #ff00cc; transform: translate(-2px, 2px); }
+        4% { text-shadow: 2px -2px var(--s150-primary), -1px 1px #ff00cc; transform: translate(2px, -2px); }
+        6% { text-shadow: 0 0 var(--s150-primary), 0 0 #ff00cc; transform: translate(0, 0); }
+        100% { text-shadow: 2px 2px var(--s150-primary), -1px -1px #ff00cc; }
+    }
+
+    .hero-subtitle {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 1.8rem;
+        color: #ddd;
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+        letter-spacing: 1px;
+    }
+
+    /* Partner Form Section */
+    .partner-section {
+        background: #0a0a0a;
+        padding: 80px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .partner-card {
+        background: rgba(20, 20, 20, 0.8);
+        border: 1px solid var(--s150-primary);
+        box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+        padding: 40px;
+        border-radius: 4px;
+    }
+
+    .form-control, .form-select {
+        background: #000;
+        border: 1px solid #333;
+        color: #fff;
+    }
+
+    .form-control:focus, .form-select:focus {
+        background: #000;
+        border-color: var(--s150-primary);
+        color: #fff;
+        box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+    }
+
+    .form-check-input:checked {
+        background-color: var(--s150-primary);
+        border-color: var(--s150-primary);
+    }
+
+    .btn-submit {
+        background: var(--s150-primary);
+        color: #000;
+        font-family: 'Orbitron', sans-serif;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        padding: 12px 30px;
+        border: none;
         transition: all 0.3s ease;
     }
-    
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+
+    .btn-submit:hover {
+        background: #fff;
+        box-shadow: 0 0 20px var(--s150-primary);
     }
 </style>
-
-    <!-- Hero Section -->
-    <section class="hero-section text-white text-center py-5">
-        <div class="container gsap-fade-in">
-            <h1 class="display-4 fw-bold mb-4" data-key="hero_title">{{ product.get_translated_name(locale) if product else _('S150 Global Edition Transport Drone') }}</h1>
-            <p class="lead mb-4" data-key="hero_subtitle">{{ product.get_translated_description(locale) if product else _('150KG heavy payload, designed for harsh environments, easily solving transport challenges in mountains, forests, and construction sites.') }}</p>
-            <a href="#contact" class="btn btn-primary btn-lg px-4" data-key="hero_cta">
-                    <i class="fas fa-paper-plane me-2"></i>{{ _('Inquire Now for a Custom Solution') }}
-                </a>
-        </div>
-    </section>
-
-    <!-- Core Advantages -->
-    <section class="py-5 bg-light gsap-fade-in">
-        <div class="container">
-            <h3 class="section-title text-center mb-5" data-key="advantages_title">Core Advantages from In-House R&D</h3>
-            <div class="row g-4 text-center">
-                <div class="col-md-6 col-lg-3">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <div class="bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 80px; height: 80px;">
-                                <i class="fas fa-box fa-2x"></i>
-                            </div>
-                            <h4 class="card-title" data-key="advantage1_title">150kg Incredible Payload</h4>
-                            <p class="card-text" data-key="advantage1_desc">Industry-leading capacity for transporting large equipment, building materials, and bulk supplies.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <div class="bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                                <i class="fas fa-clock fa-2x"></i>
-                            </div>
-                            <h4 class="card-title" data-key="advantage2_title">Long-Endurance Flight</h4>
-                            <p class="card-text" data-key="advantage2_desc">20 mins with full load, up to 45 mins empty, ensuring efficient mission completion.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <div class="bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                                <i class="fas fa-shield-alt fa-2x"></i>
-                            </div>
-                            <h4 class="card-title" data-key="advantage3_title">Industrial-Grade Protection</h4>
-                            <p class="card-text" data-key="advantage3_desc">IP55 rating handles rain and dust, adapting to various harsh operational environments.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-3">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <div class="bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                                <i class="fas fa-robot fa-2x"></i>
-                            </div>
-                            <h4 class="card-title" data-key="advantage4_title">Smart Autonomous Flight</h4>
-                            <p class="card-text" data-key="advantage4_desc">Millimeter-wave radar for intelligent obstacle avoidance. Supports route planning and one-key takeoff.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Applications -->
-    <section class="py-5 bg-white gsap-fade-in">
-        <div class="container">
-            <h3 class="section-title text-center mb-5" data-key="applications_title">Industrial Applications</h3>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card h-100 text-center">
-                        <div class="card-body">
-                            <div class="bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                                <i class="fas fa-mountain fa-2x"></i>
-                            </div>
-                            <h4 class="card-title" data-key="app1_title">Mountain Transport</h4>
-                            <p class="card-text" data-key="app1_desc">Efficiently transport supplies to remote mountainous areas where traditional vehicles cannot reach.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card h-100 text-center">
-                        <div class="card-body">
-                            <div class="bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                                <i class="fas fa-tractor fa-2x"></i>
-                            </div>
-                            <h4 class="card-title" data-key="app2_title">Agriculture</h4>
-                            <p class="card-text" data-key="app2_desc">Transport fertilizers, seeds, and equipment across large agricultural fields efficiently.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card h-100 text-center">
-                        <div class="card-body">
-                            <div class="bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                                <i class="fas fa-first-aid fa-2x"></i>
-                            </div>
-                            <h4 class="card-title" data-key="app3_title">Emergency Rescue</h4>
-                            <p class="card-text" data-key="app3_desc">Deliver emergency supplies and medical equipment to disaster-stricken areas quickly.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Gemini API Use Case Generator -->
-    <section class="py-5 bg-light gsap-fade-in">
-        <div class="container text-center">
-            <h3 class="section-title mb-4" data-key="gemini_title">AI Industry Application Lab</h3>
-            <p class="text-muted mb-4 mx-auto" style="max-width: 600px;" data-key="gemini_subtitle">Enter your industry or a specific challenge, and our AI will generate a custom transport solution using the S150 drone.</p>
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="d-flex flex-column flex-md-row gap-3">
-                        <input type="text" id="use-case-input" data-key="gemini_placeholder" placeholder="e.g., High-altitude tea leaf transport" class="form-control form-control-lg">
-                        <button id="generate-button" class="btn btn-primary btn-lg px-4">
-                            <span id="button-text" data-key="gemini_button">✨ Generate Scenario</span>
-                            <div id="loading-spinner" class="gemini-spinner mx-auto d-none"></div>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div id="result-container" class="mt-4 p-4 bg-white rounded shadow text-start mx-auto d-none" style="max-width: 800px;">
-                <h4 class="fw-bold mb-3" data-key="gemini_result_title">S150 Solution Scenario:</h4>
-                <p id="use-case-result" class="text-muted"></p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Video Showcase -->
-    <section class="py-5 bg-dark text-white gsap-fade-in">
-        <div class="container text-center">
-            <h3 class="section-title mb-4" data-key="video_title">S150 in Action</h3>
-            <div class="ratio ratio-16x9 mx-auto" style="max-width: 800px;">
-                <iframe src="https://www.youtube.com/embed/727Pd4jA7EQ?enablejsapi=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-        </div>
-    </section>
-
-    <!-- Product Gallery -->
-    <section class="py-5 bg-white gsap-fade-in">
-        <div class="container">
-            <h3 class="section-title text-center mb-4" data-key="gallery_title">Product Details Showcase</h3>
-            <div class="row g-3">
-                <div class="col-6 col-md-3">
-                    <div class="overflow-hidden rounded shadow">
-                        <img src="http://1303876058.vod-qcloud.com/dcabf752vodsh1303876058/44abef815145403699141552264/vfCobBfxNTIA.jpg" alt="S150 drone front view" class="gallery-img w-100 h-100 object-fit-cover">
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="overflow-hidden rounded shadow">
-                        <img src="http://1303876058.vod-qcloud.com/dcabf752vodsh1303876058/ebe7011f5145403699140038282/HlEVBPcLce0A.jpg" alt="S150 drone side view" class="gallery-img w-100 h-100 object-fit-cover">
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="overflow-hidden rounded shadow">
-                        <img src="http://1303876058.vod-qcloud.com/dcabf752vodsh1303876058/44abef815145403699141552264/vfCobBfxNTIA.jpg" alt="S150 drone close-up" class="gallery-img w-100 h-100 object-fit-cover">
-                    </div>
-                </div>
-                <div class="col-6 col-md-3">
-                    <div class="overflow-hidden rounded shadow">
-                        <img src="http://1303876058.vod-qcloud.com/dcabf752vodsh1303876058/28689b405145403699137626301/E5FahQQfgpYA.jpg" alt="S150 drone with smart battery packs" class="gallery-img w-100 h-100 object-fit-cover">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Live Demonstrations Section -->
-    <section class="py-5 gsap-fade-in">
-        <div class="container">
-            <h3 class="section-title text-center mb-4" data-key="demo_title">Live Demonstrations</h3>
-            <div class="row g-4">
-                <div class="col-12 col-sm-6 col-lg-4">
-                    <div class="rounded overflow-hidden shadow">
-                        <video controls poster="http://1303876058.vod-qcloud.com/dcabf752vodsh1303876058/44abef815145403699141552264/vfCobBfxNTIA.jpg" class="w-100"><source src="http://1303876058.vod-qcloud.com/dcabf752vodsh1303876058/834986e05145403699040566116/OortyJTRvu8A.mp4" type="video/mp4"></video>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-lg-4">
-                    <div class="rounded overflow-hidden shadow">
-                        <video controls poster="https://randyr90.sg-host.com/wp-content/uploads/2025/08/S150_02-scaled.jpg" class="w-100"><source src="https://randyr90.sg-host.com/wp-content/uploads/2025/08/live-demo-S150-02.mp4" type="video/mp4"></video>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-lg-4">
-                    <div class="rounded overflow-hidden shadow">
-                        <video controls poster="https://randyr90.sg-host.com/wp-content/uploads/2025/08/S150_03-scaled.jpg" class="w-100"><source src="http://1303876058.vod-qcloud.com/dcabf752vodsh1303876058/2865eb075145403699137621673/gC65hAIpAdgA.mp4" type="video/mp4"></video>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-lg-4">
-                    <div class="rounded overflow-hidden shadow">
-                        <video controls poster="http://1303876058.vod-qcloud.com/dcabf752vodsh1303876058/28689b405145403699137626301/E5FahQQfgpYA.jpg" class="w-100"><source src="http://1303876058.vod-qcloud.com/dcabf752vodsh1303876058/db49aa875145403699136605573/ntaCDqWa9WQA.mp4" type="video/mp4"></video>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-lg-4">
-                    <div class="rounded overflow-hidden shadow">
-                        <video controls poster="http://1303876058.vod-qcloud.com/dcabf752vodsh1303876058/b8e3ad455145403699139205176/afJ4Ap9kowMA.jpg" class="w-100"><source src="http://1303876058.vod-qcloud.com/dcabf752vodsh1303876058/2b3c62a85145403699137796004/ENvPWrZTFf0A.mp4" type="video/mp4"></video>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Technical Specifications -->
-    <section id="specifications" class="py-5 bg-light gsap-fade-in">
-        <div class="container">
-            <h3 class="section-title text-center mb-5" data-key="specs_title">Technical Specifications</h3>
-            <div class="card shadow">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h4 class="mb-4" data-key="specs_basic_title">Basic Parameters</h4>
-                            <div class="list-group list-group-flush">
-                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span data-key="specs_weight">Weight:</span>
-                                    <span class="fw-bold" data-key="specs_weight_value">35kg</span>
-                                </div>
-                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span data-key="specs_payload">Payload:</span>
-                                    <span class="fw-bold" data-key="specs_payload_value">150kg</span>
-                                </div>
-                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span data-key="specs_size">Size:</span>
-                                    <span class="fw-bold" data-key="specs_size_value">2000×2000×800mm</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <h4 class="mb-4" data-key="specs_performance_title">Performance</h4>
-                            <div class="list-group list-group-flush">
-                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span data-key="specs_flight_time">Flight Time:</span>
-                                    <span class="fw-bold" data-key="specs_flight_time_value">20-45 mins</span>
-                                </div>
-                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span data-key="specs_max_speed">Max Speed:</span>
-                                    <span class="fw-bold" data-key="specs_max_speed_value">72km/h</span>
-                                </div>
-                                <div class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span data-key="specs_control_range">Control Range:</span>
-                                    <span class="fw-bold" data-key="specs_control_range_value">10km</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Call to Action -->
-    <section id="contact" class="bg-primary py-5 gsap-fade-in">
-        <div class="container text-center text-white">
-            <h3 class="section-title mb-4" data-key="cta_title">Ready to Elevate Your Transport Efficiency?</h3>
-            <p class="lead mb-4 mx-auto" style="max-width: 800px;" data-key="cta_subtitle">We are the source factory and support OEM/ODM services. Contact our expert team now for a tailored aerial transport solution.</p>
-            <a href="mailto:renzhi@partdro.com?subject=Inquiry about S150 Drone" class="btn btn-light btn-lg px-5" data-key="cta_button">
-                Email for Inquiry
-            </a>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-dark text-muted py-4">
-        <div class="container text-center">
-            <p>&copy; 2025 Partdro. All Rights Reserved.</p>
-            <p class="small mt-2" data-key="footer_note">Contact us at: renzhi@partdro.com</p>
-        </div>
-    </footer>
-    
-
-
-    <!-- GSAP & ScrollTrigger Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-
-    <!-- GTM DataLayer Push for Video Tracking -->
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        var videos = document.querySelectorAll('video');
-        videos.forEach(function(video) {
-          var hasStarted = false;
-          // Listen for video play event
-          video.addEventListener('play', function() {
-            if (!hasStarted) {
-              window.dataLayer.push({
-                'event': 'video_start',
-                'video_url': video.currentSrc || 'N/A'
-              });
-              hasStarted = true;
-            }
-          });
-          // Listen for video ended event
-          video.addEventListener('ended', function() {
-            window.dataLayer.push({
-              'event': 'video_complete',
-              'video_url': video.currentSrc || 'N/A'
-            });
-          });
-        });
-      });
-    </script>
-    
-    <!-- Gemini API, Language Translation & GSAP Animation Logic -->
-    <script>
-        // --- Gemini API Logic ---
-        const generateButton = document.getElementById('generate-button');
-        const buttonText = document.getElementById('button-text');
-        const loadingSpinner = document.getElementById('loading-spinner');
-        const useCaseInput = document.getElementById('use-case-input');
-        const resultContainer = document.getElementById('result-container');
-        const useCaseResult = document.getElementById('use-case-result');
-
-        const callGeminiApi = async (prompt) => {
-            const apiKey = ""; // API key is handled by the environment
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-            
-            const payload = {
-                contents: [{
-                    parts: [{ text: prompt }]
-                }]
-            };
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    throw new Error(`API call failed with status: ${response.status}`);
-                }
-
-                const result = await response.json();
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    return result.candidates[0].content.parts[0].text;
-                } else {
-                    return "Sorry, I couldn't generate a scenario. Please try again.";
-                }
-            } catch (error) {
-                console.error("Error calling Gemini API:", error);
-                return "An error occurred while generating the scenario. Please check the console for details.";
-            }
-        };
-
-        generateButton.addEventListener('click', async () => {
-            const userInput = useCaseInput.value.trim();
-            if (!userInput) {
-                alert('Please enter an industry or challenge.');
-                return;
-            }
-            
-            // Push event to GTM DataLayer
-            window.dataLayer.push({
-                'event': 'generate_ai_scenario',
-                'user_prompt': userInput
-            });
-
-            // Show loading state
-            buttonText.classList.add('hidden');
-            loadingSpinner.classList.remove('hidden');
-            generateButton.disabled = true;
-            resultContainer.classList.add('hidden');
-
-            const prompt = `
-                You are an expert on industrial drones. A potential customer is interested in the S150 Transport Drone.
-                The S150 drone has the following key features: 150kg maximum payload, 20-minute flight time with full load, all-weather IP55 rating, and smart autonomous flight capabilities.
-                The customer has specified their industry/challenge as: "${userInput}".
-                
-                Generate a creative, practical, and compelling use case scenario for them. Structure the response with the following sections:
-                1.  **Challenge:** Briefly restate the customer's challenge.
-                2.  **S150 Solution:** Describe step-by-step how the S150 drone would be deployed to solve this challenge. Be specific and realistic.
-                3.  **Key Benefits:** List 3-4 bullet points highlighting the main advantages of using the S150 in this scenario (e.g., increased efficiency, reduced cost, improved safety).
-                
-                Keep the tone professional, confident, and helpful.
-            `;
-
-            const generatedText = await callGeminiApi(prompt);
-            
-            // Hide loading state
-            loadingSpinner.classList.add('hidden');
-            buttonText.classList.remove('hidden');
-            generateButton.disabled = false;
-            
-            // Display result
-            useCaseResult.textContent = generatedText;
-            resultContainer.classList.remove('hidden');
-        });
-
-
-        // --- Language Translation & GSAP Logic ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- GSAP Animation Setup ---
-            gsap.registerPlugin(ScrollTrigger);
-
-            // Animate each section with the .gsap-fade-in class
-            gsap.utils.toArray('.gsap-fade-in').forEach(section => {
-                const tl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: section,
-                        start: 'top 80%', // Animation starts when the top of the section is 80% from the top of the viewport
-                        toggleActions: 'play none none none'
-                    }
-                });
-
-                tl.to(section, { 
-                    opacity: 1, 
-                    y: 0, 
-                    duration: 1, 
-                    ease: 'power3.out' 
-                });
-
-                // Stagger animation for children elements inside the section
-                const children = section.querySelectorAll('.grid > div');
-                if (children.length > 0) {
-                    tl.from(children, {
-                        opacity: 0,
-                        y: 30,
-                        stagger: 0.2,
-                        duration: 0.8,
-                        ease: 'power3.out'
-                    }, "-=0.5"); // Start this animation slightly before the parent finishes
-                }
-            });
-
-
-            // --- Language Switching Logic ---
-            const languageSelector = document.getElementById('language-selector');
-            
-            const setLanguage = (lang) => {
-                // Set html lang attribute
-                document.documentElement.lang = lang;
-
-                // Translate all elements with data-key
-                document.querySelectorAll('[data-key]').forEach(element => {
-                    const key = element.getAttribute('data-key');
-                    if (translations[lang] && translations[lang][key]) {
-                        if (element.tagName === 'META' || element.tagName === 'TITLE') {
-                            // For meta tags, update the 'content' attribute
-                            if (element.tagName === 'TITLE') {
-                                document.title = translations[lang][key];
-                            } else {
-                                element.setAttribute('content', translations[lang][key]);
-                            }
-                        } else if (element.tagName === 'INPUT') {
-                            element.placeholder = translations[lang][key];
-                        }
-                        else {
-                            element.innerHTML = translations[lang][key];
-                        }
-                    }
-                });
-            };
-
-            languageSelector.addEventListener('change', (event) => {
-                setLanguage(event.target.value);
-            });
-
-            // Set default language on page load
-            setLanguage('en');
-        });
-
-        const translations = {
-            en: {
-                meta_title: "S150 Transport Drone - 150kg Heavy Payload, The New Era of Aerial Logistics",
-                meta_description: "Discover the S150 heavy-lift transport drone, designed for industrial applications. With an incredible 150kg payload, it's perfect for mountain transport, agriculture, construction, and emergency rescue. Contact us for a custom solution.",
-                product_name: "S150 Transport Drone",
-                get_quote_button: "Get Quote",
-                hero_title: "S150 Global Edition Transport Drone",
-                hero_subtitle: "150KG heavy payload, designed for harsh environments, easily solving transport challenges in mountains, forests, and construction sites.",
-                hero_cta: "Inquire Now for a Custom Solution",
-                advantages_title: "Core Advantages from In-House R&D",
-                advantage1_title: "150kg Incredible Payload",
-                advantage1_desc: "Industry-leading capacity for transporting large equipment, building materials, and bulk supplies.",
-                advantage2_title: "Long-Endurance Flight",
-                advantage2_desc: "20 mins with full load, up to 45 mins empty, ensuring efficient mission completion.",
-                advantage3_title: "Industrial-Grade Protection",
-                advantage3_desc: "IP55 rating handles rain and dust, adapting to various harsh operational environments.",
-                advantage4_title: "Smart Autonomous Flight",
-                advantage4_desc: "Millimeter-wave radar for intelligent obstacle avoidance. Supports route planning and one-key takeoff.",
-                scenarios_title: "Diverse Application Scenarios",
-                scenario1_title: "Mountain/Agricultural Transport",
-                scenario1_desc: "Bypass terrain limits to quickly deliver seeds, fertilizers, or supplies to remote farms, boosting efficiency and cutting labor costs.",
-                scenario2_title: "Engineering/Powerline Inspection",
-                scenario2_desc: "Transport tools and materials for construction sites, power towers, and bridges. Safer high-altitude work, accelerated project timelines.",
-                gemini_title: "AI Industry Application Lab",
-                gemini_subtitle: "Enter your industry or a specific challenge, and our AI will generate a custom transport solution using the S150 drone.",
-                gemini_placeholder: "e.g., High-altitude tea leaf transport",
-                gemini_button: "✨ Generate Scenario",
-                gemini_result_title: "S150 Solution Scenario:",
-                video_title: "S150 in Action",
-                video_fallback: "Your browser does not support the video tag.",
-                gallery_title: "Product Details Showcase",
-                demo_title: "Live Demonstrations",
-                specs_title: "Detailed Technical Specifications",
-                spec_max_payload: "Max Payload:",
-                spec_max_takeoff_weight: "Max Takeoff Weight:",
-                spec_empty_weight: "Empty Weight:",
-                spec_endurance_full: "Endurance (Full Load):",
-                spec_endurance_empty: "Endurance (No-Load):",
-                spec_max_speed: "Max Flight Speed:",
-                spec_wheelbase: "Wheelbase:",
-                spec_rc_range: "RC/Data Link Range:",
-                spec_battery: "Battery Capacity:",
-                spec_ip_rating: "IP Rating:",
-                spec_temp: "Operating Temperature:",
-                spec_dimensions: "Dimensions (Unfolded, mm):",
-                cta_title: "Ready to Elevate Your Transport Efficiency?",
-                cta_subtitle: "We are the source factory and support OEM/ODM services. Contact our expert team now for a tailored aerial transport solution.",
-                cta_button: "Email for Inquiry",
-                footer_note: "Contact us at: info@partdro.com"
-            },
-            es: {
-                meta_title: "Dron de Transporte S150 - 150kg de Carga Pesada, La Nueva Era de la Logística Aérea",
-                meta_description: "Descubra el dron de transporte pesado S150, diseñado para aplicaciones industriales. Con una increíble carga útil de 150 kg, es perfecto para el transporte en montaña, agricultura, construcción y rescate de emergencia. Contáctenos para una solución personalizada.",
-                product_name: "Dron de Transporte S150",
-                get_quote_button: "Obtener Cotización",
-                hero_title: "Dron de Transporte S150 Edición Global",
-                hero_subtitle: "Carga pesada de 150KG, diseñado para entornos hostiles, resolviendo fácilmente los desafíos de transporte en montañas, bosques y sitios de construcción.",
-                hero_cta: "Consulte Ahora para una Solución a Medida",
-                advantages_title: "Ventajas Clave de I+D Propio",
-                advantage1_title: "Carga Útil Increíble de 150kg",
-                advantage1_desc: "Capacidad líder en la industria para transportar equipos grandes, materiales de construcción y suministros a granel.",
-                advantage2_title: "Vuelo de Larga Duración",
-                advantage2_desc: "20 minutos con carga completa, hasta 45 minutos vacío, asegurando la finalización eficiente de la misión.",
-                advantage3_title: "Protección de Grado Industrial",
-                advantage3_desc: "Clasificación IP55 que soporta lluvia y polvo, adaptándose a diversos entornos operativos hostiles.",
-                advantage4_title: "Vuelo Autónomo Inteligente",
-                advantage4_desc: "Radar de ondas milimétricas para evitación inteligente de obstáculos. Admite planificación de rutas y despegue con una sola tecla.",
-                scenarios_title: "Diversos Escenarios de Aplicación",
-                scenario1_title: "Transporte Agrícola/Montañoso",
-                scenario1_desc: "Supere los límites del terreno para entregar rápidamente semillas, fertilizantes o suministros a granjas remotas, aumentando la eficiencia y reduciendo los costos laborales.",
-                scenario2_title: "Inspección de Ingeniería/Líneas Eléctricas",
-                scenario2_desc: "Transporte de herramientas y materiales para sitios de construcción, torres eléctricas y puentes. Trabajo en altura más seguro, plazos de proyecto acelerados.",
-                gemini_title: "Laboratorio de Aplicaciones Industriales con IA",
-                gemini_subtitle: "Ingrese su industria o un desafío específico, y nuestra IA generará una solución de transporte personalizada usando el dron S150.",
-                gemini_placeholder: "Ej: Transporte de hojas de té a gran altitud",
-                gemini_button: "✨ Generar Escenario",
-                gemini_result_title: "Escenario de Solución S150:",
-                video_title: "S150 en Acción",
-                video_fallback: "Su navegador no soporta la etiqueta de video.",
-                gallery_title: "Galería de Detalles del Producto",
-                demo_title: "Demostraciones en Vivo",
-                specs_title: "Especificaciones Técnicas Detalladas",
-                spec_max_payload: "Carga Máxima:",
-                spec_max_takeoff_weight: "Peso Máx. Despegue:",
-                spec_empty_weight: "Peso Vacío:",
-                spec_endurance_full: "Autonomía (Carga Completa):",
-                spec_endurance_empty: "Autonomía (Sin Carga):",
-                spec_max_speed: "Velocidad Máx. de Vuelo:",
-                spec_wheelbase: "Distancia entre Ejes:",
-                spec_rc_range: "Alcance RC/Datos:",
-                spec_battery: "Capacidad de Batería:",
-                spec_ip_rating: "Clasificación IP:",
-                spec_temp: "Temperatura de Operación:",
-                spec_dimensions: "Dimensiones (Desplegado, mm):",
-                cta_title: "¿Listo para Elevar su Eficiencia de Transporte?",
-                cta_subtitle: "Somos la fábrica de origen y ofrecemos servicios de OEM/ODM. Contacte a nuestro equipo de expertos ahora para una solución de transporte aéreo a medida.",
-                cta_button: "Enviar Correo para Consulta",
-                footer_note: "Contáctenos en: info@partdro.com"
-            },
-            de: {
-                meta_title: "S150 Transportdrohne - 150kg Schwerlast, Die neue Ära der Luftlogistik",
-                meta_description: "Entdecken Sie die S150 Schwerlast-Transportdrohne, entwickelt für industrielle Anwendungen. Mit einer unglaublichen Nutzlast von 150 kg ist sie perfekt für Bergtransporte, Landwirtschaft, Bauwesen und Notfallrettung. Kontaktieren Sie uns für eine maßgeschneiderte Lösung.",
-                product_name: "S150 Transportdrohne",
-                get_quote_button: "Angebot anfordern",
-                hero_title: "S150 Global Edition Transportdrohne",
-                hero_subtitle: "150KG Schwerlast, für raue Umgebungen konzipiert, löst mühelos Transportprobleme in Bergen, Wäldern und auf Baustellen.",
-                hero_cta: "Jetzt für eine maßgeschneiderte Lösung anfragen",
-                advantages_title: "Kernvorteile durch hauseigene F&E",
-                advantage1_title: "150kg Unglaubliche Nutzlast",
-                advantage1_desc: "Branchenführende Kapazität für den Transport von Großgeräten, Baumaterialien und Massengütern.",
-                advantage2_title: "Langstreckenflug",
-                advantage2_desc: "20 Min. bei voller Last, bis zu 45 Min. leer, für eine effiziente Missionsdurchführung.",
-                advantage3_title: "Schutz nach Industriestandard",
-                advantage3_desc: "IP55-Schutzklasse widersteht Regen und Staub und passt sich an verschiedene raue Betriebsumgebungen an.",
-                advantage4_title: "Intelligenter autonomer Flug",
-                advantage4_desc: "Millimeterwellen-Radar zur intelligenten Hindernisvermeidung. Unterstützt Routenplanung und Ein-Tasten-Start.",
-                scenarios_title: "Vielfältige Anwendungsszenarien",
-                scenario1_title: "Berg-/Landwirtschaftstransport",
-                scenario1_desc: "Überwinden Sie Geländegrenzen, um Saatgut, Dünger oder Vorräte schnell zu entlegenen Farmen zu liefern, die Effizienz zu steigern und Arbeitskosten zu senken.",
-                scenario2_title: "Ingenieurwesen/Stromleitungsinspektion",
-                scenario2_desc: "Transport von Werkzeugen und Materialien für Baustellen, Strommasten und Brücken. Sicherere Höhenarbeit, beschleunigte Projektzeitpläne.",
-                gemini_title: "KI-Industrieanwendungslabor",
-                gemini_subtitle: "Geben Sie Ihre Branche oder eine spezifische Herausforderung ein, und unsere KI generiert eine maßgeschneiderte Transportlösung mit der S150-Drohne.",
-                gemini_placeholder: "z.B. Transport von Teeblättern in großer Höhe",
-                gemini_button: "✨ Szenario generieren",
-                gemini_result_title: "S150-Lösungsszenario:",
-                video_title: "S150 in Aktion",
-                video_fallback: "Ihr Browser unterstützt das Video-Tag nicht.",
-                gallery_title: "Produktdetails-Showcase",
-                demo_title: "Live-Demonstrationen",
-                specs_title: "Detaillierte technische Spezifikationen",
-                spec_max_payload: "Max. Nutzlast:",
-                spec_max_takeoff_weight: "Max. Abfluggewicht:",
-                spec_empty_weight: "Leergewicht:",
-                spec_endurance_full: "Flugdauer (Vollast):",
-                spec_endurance_empty: "Flugdauer (Ohne Last):",
-                spec_max_speed: "Max. Fluggeschwindigkeit:",
-                spec_wheelbase: "Radstand:",
-                spec_rc_range: "RC/Datenlink-Reichweite:",
-                spec_battery: "Akkukapazität:",
-                spec_ip_rating: "IP-Schutzart:",
-                spec_temp: "Betriebstemperatur:",
-                spec_dimensions: "Abmessungen (ausgeklappt, mm):",
-                cta_title: "Bereit, Ihre Transporteffizienz zu steigern?",
-                cta_subtitle: "Wir sind die Quellenfabrik und unterstützen OEM/ODM-Dienstleistungen. Kontaktieren Sie jetzt unser Expertenteam für eine maßgeschneiderte Lufttransportlösung.",
-                cta_button: "E-Mail für Anfrage",
-                footer_note: "Kontaktieren Sie uns unter: info@partdro.com"
-            },
-            fr: {
-                meta_title: "Drone de Transport S150 - 150kg de Charge Utile, La Nouvelle Ère de la Logistique Aérienne",
-                meta_description: "Découvrez le drone de transport lourd S150, conçu pour les applications industrielles. Avec une charge utile incroyable de 150 kg, il est parfait pour le transport en montagne, l'agriculture, la construction et les secours d'urgence. Contactez-nous pour une solution sur mesure.",
-                product_name: "Drone de Transport S150",
-                get_quote_button: "Obtenir un Devis",
-                hero_title: "Drone de Transport S150 Édition Mondiale",
-                hero_subtitle: "Charge utile de 150KG, conçu pour les environnements difficiles, résolvant facilement les défis de transport en montagne, en forêt et sur les chantiers.",
-                hero_cta: "Demandez maintenant une solution sur mesure",
-                advantages_title: "Avantages Clés de notre R&D Interne",
-                advantage1_title: "Charge Utile Incroyable de 150kg",
-                advantage1_desc: "Capacité de pointe pour le transport de gros équipements, de matériaux de construction et de fournitures en vrac.",
-                advantage2_title: "Vol Longue Durée",
-                advantage2_desc: "20 min à pleine charge, jusqu'à 45 min à vide, garantissant l'achèvement efficace des missions.",
-                advantage3_title: "Protection de Qualité Industrielle",
-                advantage3_desc: "L'indice IP55 résiste à la pluie et à la poussière, s'adaptant à divers environnements opérationnels difficiles.",
-                advantage4_title: "Vol Autonome Intelligent",
-                advantage4_desc: "Radar à ondes millimétriques pour l'évitement intelligent des obstacles. Prend en charge la planification d'itinéraire et le décollage à une touche.",
-                scenarios_title: "Scénarios d'Application Diversifiés",
-                scenario1_title: "Transport Agricole/Montagnard",
-                scenario1_desc: "Dépassez les limites du terrain pour livrer rapidement des semences, des engrais ou des fournitures aux fermes éloignées, augmentant l'efficacité et réduisant les coûts de main-d'œuvre.",
-                scenario2_title: "Ingénierie/Inspection de Lignes Électriques",
-                scenario2_desc: "Transportez des outils et des matériaux pour les chantiers de construction, les pylônes électriques et les ponts. Travail en hauteur plus sûr, délais de projet accélérés.",
-                gemini_title: "Laboratoire d'Applications Industrielles IA",
-                gemini_subtitle: "Entrez votre secteur d'activité ou un défi spécifique, et notre IA générera une solution de transport personnalisée à l'aide du drone S150.",
-                gemini_placeholder: "Ex: Transport de feuilles de thé en haute altitude",
-                gemini_button: "✨ Générer un Scénario",
-                gemini_result_title: "Scénario de Solution S150:",
-                video_title: "Le S150 en Action",
-                video_fallback: "Votre navigateur ne prend pas en charge la balise vidéo.",
-                gallery_title: "Présentation des Détails du Produit",
-                demo_title: "Démonstrations en Direct",
-                specs_title: "Spécifications Techniques Détaillées",
-                spec_max_payload: "Charge Utile Max :",
-                spec_max_takeoff_weight: "Poids Max. au Décollage :",
-                spec_empty_weight: "Poids à Vide :",
-                spec_endurance_full: "Autonomie (Pleine Charge) :",
-                spec_endurance_empty: "Autonomie (À Vide) :",
-                spec_max_speed: "Vitesse de Vol Max :",
-                spec_wheelbase: "Empattement :",
-                spec_rc_range: "Portée RC/Liaison de Données :",
-                spec_battery: "Capacité de la Batterie :",
-                spec_ip_rating: "Indice de Protection IP :",
-                spec_temp: "Température de Fonctionnement :",
-                spec_dimensions: "Dimensions (déplié, mm) :",
-                cta_title: "Prêt à Améliorer Votre Efficacité de Transport ?",
-                cta_subtitle: "Nous sommes l'usine source et soutenons les services OEM/ODM. Contactez notre équipe d'experts dès maintenant pour une solution de transport aérien sur mesure.",
-                cta_button: "Email pour Demande d'Information",
-                footer_note: "Contactez-nous à : info@partdro.com"
-            },
-            ja: {
-                meta_title: "S150輸送ドローン - 150kg高積載、航空物流の新時代",
-                meta_description: "産業用途向けに設計されたS150重量物輸送ドローンをご覧ください。驚異的な150kgのペイロードで、山岳輸送、農業、建設、緊急救助に最適です。カスタムソリューションについてはお問い合わせください。",
-                product_name: "S150輸送ドローン",
-                get_quote_button: "見積もり取得",
-                hero_title: "S150グローバル版輸送ドローン",
-                hero_subtitle: "150KGの高積載、過酷な環境向けに設計され、山、森林、建設現場での輸送課題を容易に解決します。",
-                hero_cta: "カスタムソリューションのお問い合わせ",
-                advantages_title: "自社開発によるコアな利点",
-                advantage1_title: "150kgの驚異的なペイロード",
-                advantage1_desc: "大型機器、建材、バルク用品の輸送において業界をリードする能力。",
-                advantage2_title: "長時間飛行",
-                advantage2_desc: "全負荷で20分、無負荷で最大45分。効率的なミッション完了を保証します。",
-                advantage3_title: "工業グレードの保護",
-                advantage3_desc: "IP55等級は雨やほこりに対応し、さまざまな過酷な運用環境に適応します。",
-                advantage4_title: "スマート自律飛行",
-                advantage4_desc: "ミリ波レーダーによるインテリジェントな障害物回避。ルート計画とワンキー離陸をサポートします。",
-                scenarios_title: "多様な応用シナリオ",
-                scenario1_title: "山岳/農業輸送",
-                scenario1_desc: "地形の制限を乗り越え、種子、肥料、物資を遠隔地の農場に迅速に配送し、効率を高め、人件費を削減します。",
-                scenario2_title: "エンジニアリング/電力線検査",
-                scenario2_desc: "建設現場、送電鉄塔、橋梁向けの工具や資材を輸送。より安全な高所作業、プロジェクトのタイムラインを加速します。",
-                gemini_title: "AI産業応用ラボ",
-                gemini_subtitle: "あなたの業界や特定の課題を入力すると、AIがS150ドローンを使用したカスタム輸送ソリューションを生成します。",
-                gemini_placeholder: "例：高地での茶葉輸送",
-                gemini_button: "✨ シナリオを生成",
-                gemini_result_title: "S150ソリューションシナリオ：",
-                video_title: "S150の実演",
-                video_fallback: "お使いのブラウザはビデオタグをサポートしていません。",
-                gallery_title: "製品詳細ショーケース",
-                demo_title: "実演",
-                specs_title: "詳細な技術仕様",
-                spec_max_payload: "最大ペイロード:",
-                spec_max_takeoff_weight: "最大離陸重量:",
-                spec_empty_weight: "機体重量:",
-                spec_endurance_full: "航続時間（全負荷）:",
-                spec_endurance_empty: "航続時間（無負荷）:",
-                spec_max_speed: "最大飛行速度:",
-                spec_wheelbase: "ホイールベース:",
-                spec_rc_range: "RC/データリンク範囲:",
-                spec_battery: "バッテリー容量:",
-                spec_ip_rating: "IP等級:",
-                spec_temp: "動作温度:",
-                spec_dimensions: "寸法（展開時、mm）:",
-                cta_title: "輸送効率を向上させる準備はできましたか？",
-                cta_subtitle: "私たちはソース工場であり、OEM/ODMサービスをサポートしています。カスタマイズされた航空輸送ソリューションについては、今すぐ専門家チームにお問い合わせください。",
-                cta_button: "メールでお問い合わせ",
-                footer_note: "お問い合わせ：info@partdro.com"
-            }
-        };
-    </script>
 {% endblock %}
 
+{% block content %}
+<!-- Hero Section -->
+<div class="hero-wrapper">
+    <video class="hero-video" autoplay muted loop playsinline poster="https://cdncn.prodrone-tech.com/portal/20240626/63dc3d356ee7139ba067ce24de7e0f35.jpg-watermark">
+        <source src="https://cdncn.prodrone-tech.com/portal/20240626/5ed4715335a1ba1e494ff9939ece994d.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <!-- 动态数据：产品名称 -->
+        <h1 class="glitch-title">{{ product.get_translated_name(get_locale()) }}</h1>
+        <!-- 动态数据：产品描述 -->
+        <p class="hero-subtitle">{{ product.get_translated_description(get_locale()) }}</p>
+        
+        <div class="mt-5">
+            <a href="#partner-form" class="btn btn-submit btn-lg me-3">{{ _('Become a Partner') }}</a>
+            <a href="#features" class="btn btn-outline-light btn-lg font-orbitron">{{ _('Learn More') }}</a>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section (Static with Translations) -->
+<section id="features" class="py-5 bg-black">
+    <div class="container py-5">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="display-4 font-orbitron text-white mb-3">{{ _('Core Advantages') }}</h2>
+                <div class="mx-auto" style="width: 60px; height: 3px; background: var(--s150-primary);"></div>
+            </div>
+        </div>
+        <div class="row g-5">
+            <!-- Feature 1 -->
+            <div class="col-md-3 text-center">
+                <div class="mb-4">
+                    <i class="fas fa-weight-hanging fa-3x text-primary"></i>
+                </div>
+                <h4 class="text-white font-orbitron">{{ _('150kg Payload') }}</h4>
+                <p class="text-muted">{{ _('Industry-leading lifting capacity for heavy logistics and equipment transport.') }}</p>
+            </div>
+            <!-- Feature 2 -->
+            <div class="col-md-3 text-center">
+                <div class="mb-4">
+                    <i class="fas fa-battery-full fa-3x text-primary"></i>
+                </div>
+                <h4 class="text-white font-orbitron">{{ _('Long Endurance') }}</h4>
+                <p class="text-muted">{{ _('Optimized power system ensures extended flight times for complex missions.') }}</p>
+            </div>
+            <!-- Feature 3 -->
+            <div class="col-md-3 text-center">
+                <div class="mb-4">
+                    <i class="fas fa-shield-alt fa-3x text-primary"></i>
+                </div>
+                <h4 class="text-white font-orbitron">{{ _('IP55 Protection') }}</h4>
+                <p class="text-muted">{{ _('All-weather capability designed to withstand rain, dust, and harsh environments.') }}</p>
+            </div>
+            <!-- Feature 4 -->
+            <div class="col-md-3 text-center">
+                <div class="mb-4">
+                    <i class="fas fa-microchip fa-3x text-primary"></i>
+                </div>
+                <h4 class="text-white font-orbitron">{{ _('Smart Flight') }}</h4>
+                <p class="text-muted">{{ _('Advanced autonomous navigation and obstacle avoidance systems.') }}</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Partner Application Form -->
+<section id="partner-form" class="partner-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="partner-card">
+                    <h2 class="text-center text-white font-orbitron mb-4">{{ _('Apply to Become a Partner') }}</h2>
+                    <p class="text-center text-muted mb-5">{{ _('Join our global network and transform your industry with the S150.') }}</p>
+                    
+                    <form id="applicationForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label text-primary">{{ _('Name') }}</label>
+                                <input type="text" class="form-control" name="name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-primary">{{ _('Email') }}</label>
+                                <input type="email" class="form-control" name="email" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-primary">{{ _('Company') }}</label>
+                                <input type="text" class="form-control" name="company">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-primary">{{ _('Phone') }}</label>
+                                <input type="tel" class="form-control" name="phone">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label text-primary">{{ _('Country / Region') }}</label>
+                                <input type="text" class="form-control" name="country">
+                            </div>
+                            
+                            <!-- Industries Checkboxes -->
+                            <div class="col-12 mt-4">
+                                <label class="form-label text-primary mb-3">{{ _('Which of the following industries do you plan to sell Partdro products to? (Check all that apply)') }}</label>
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="industries" value="Public Safety" id="ind1">
+                                            <label class="form-check-label text-light" for="ind1">{{ _('Public Safety') }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="industries" value="Energy" id="ind2">
+                                            <label class="form-check-label text-light" for="ind2">{{ _('Energy') }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="industries" value="Infrastructure" id="ind3">
+                                            <label class="form-check-label text-light" for="ind3">{{ _('Infrastructure') }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="industries" value="Media" id="ind4">
+                                            <label class="form-check-label text-light" for="ind4">{{ _('Media') }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="industries" value="Precision Agriculture" id="ind5">
+                                            <label class="form-check-label text-light" for="ind5">{{ _('Precision Agriculture') }}</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="industries" value="Other" id="ind6">
+                                            <label class="form-check-label text-light" for="ind6">{{ _('Other') }}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <label class="form-label text-primary">{{ _('Message') }}</label>
+                                <textarea class="form-control" name="message" rows="4"></textarea>
+                            </div>
+
+                            <div class="col-12 mt-4 text-center">
+                                <button type="submit" class="btn btn-submit w-100">{{ _('Submit Application') }}</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('applicationForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const industries = [];
+    document.querySelectorAll('input[name="industries"]:checked').forEach(cb => {
+        industries.push(cb.value);
+    });
+    
+    const data = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        company: formData.get('company'),
+        phone: formData.get('phone'),
+        country: formData.get('country'),
+        industries: industries,
+        message: formData.get('message')
+    };
+    
+    fetch('{{ url_for("main.apply_partner") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            alert('{{ _("Thank you! Your application has been submitted.") }}');
+            this.reset();
+            
+            // GTM Data Layer Push
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                'event': 'partner_application_submitted',
+                'form_location': 's150_landing_page',
+                'industry_selection': industries,
+                'user_country': data.country
+            });
+        } else {
+            alert('{{ _("Submission failed. Please try again.") }}');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('{{ _("An error occurred.") }}');
+    });
+});
+</script>
+{% endblock %}

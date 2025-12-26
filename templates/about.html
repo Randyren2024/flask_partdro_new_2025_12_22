@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us | partdro{% endblock %}
+
+{% block content %}
+    <section class="relative pt-32 pb-16 bg-deepNavy bg-circuit-pattern overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-deepNavy/95"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+             <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+                About <span class="text-cyberCyan">partdro</span>
+            </h1>
+            <p class="text-xl text-quantumSilver mt-6 max-w-2xl mx-auto">
+                We are the critical link in the unmanned aerial ecosystem, dedicated to keeping the world's drone fleets operational.
+            </p>
+        </div>
+    </section>
+
+    <section class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center mb-24">
+                <div>
+                    <h2 class="text-3xl font-bold text-white mb-6">Our Story</h2>
+                    <div class="space-y-4 text-quantumSilver">
+                        <p>Founded by experts in aerospace engineering and international logistics, partdro recognized a critical gap in the drone industry: the difficulty of sourcing reliable, original components quickly.</p>
+                        <p>We set out to build a digital infrastructure that connects top-tier manufacturers directly with B2B clients, repair centers, and developers worldwide. Today, we are proud to be a trusted partner for those who rely on precision aerial technology.</p>
+                    </div>
+                </div>
+                 <div class="mt-10 lg:mt-0 relative">
+                     <img src="path/to/your/about-image-tech.jpg" alt="Drone Technology Analysis" class="rounded-xl shadow-2xl border border-cyberCyan/20">
+                    <div class="absolute -inset-4 bg-cyberCyan/10 blur-2xl rounded-full -z-10 opacity-50"></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div class="glass-card p-8 rounded-2xl border-t-4 border-cyberCyan">
+                    <h3 class="text-2xl font-bold text-white mb-4">Our Mission</h3>
+                    <p class="text-quantumSilver">To empower the drone industry by ensuring instant access to critical, high-quality components, minimizing downtime worldwide.</p>
+                </div>
+                <div class="glass-card p-8 rounded-2xl border-t-4 border-cyberCyan">
+                    <h3 class="text-2xl font-bold text-white mb-4">Our Vision</h3>
+                    <p class="text-quantumSilver">To become the central nervous system of the global drone supply chain, defining standards for speed, transparency, and quality.</p>
+                </div>
+                <div class="glass-card p-8 rounded-2xl border-t-4 border-cyberCyan">
+                    <h3 class="text-2xl font-bold text-white mb-4">Core Values</h3>
+                    <ul class="text-quantumSilver space-y-2 list-disc list-inside">
+                        <li><span class="text-cyberCyan">Precision:</span> Accuracy in every part and shipment.</li>
+                        <li><span class="text-cyberCyan">Integrity:</span> Only genuine OEM components.</li>
+                        <li><span class="text-cyberCyan">Speed:</span> Keeping pace with the industry.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-darkCurrent/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+             <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-white">Meet the Specialists</h2>
+                <p class="text-quantumSilver mt-4 max-w-xl mx-auto">The minds powering our global operations.</p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+                <div class="group text-center">
+                    <div class="relative w-48 h-48 mx-auto rounded-full overflow-hidden border-2 border-cyberCyan/30 group-hover:border-cyberCyan group-hover:shadow-neon transition duration-500 mb-6">
+                        <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-500" src="path/to/team-member1.jpg" alt="Team Member">
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Alex Chen</h3>
+                    <p class="text-cyberCyan">Lead Tech Engineer</p>
+                </div>
+                 <div class="group text-center">
+                    <div class="relative w-48 h-48 mx-auto rounded-full overflow-hidden border-2 border-cyberCyan/30 bg-deepNavy flex items-center justify-center mb-6">
+                        <span class="text-quantumSilver">Photo</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Sarah Johnson</h3>
+                    <p class="text-cyberCyan">Global Logistics</p>
+                </div>
+                 <div class="group text-center">
+                    <div class="relative w-48 h-48 mx-auto rounded-full overflow-hidden border-2 border-cyberCyan/30 bg-deepNavy flex items-center justify-center mb-6">
+                         <span class="text-quantumSilver">Photo</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">David Lee</h3>
+                    <p class="text-cyberCyan">Procurement Head</p>
+                </div>
+                 <div class="group text-center">
+                    <div class="relative w-48 h-48 mx-auto rounded-full overflow-hidden border-2 border-cyberCyan/30 bg-deepNavy flex items-center justify-center mb-6">
+                         <span class="text-quantumSilver">Photo</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white">Maria Rodriguez</h3>
+                    <p class="text-cyberCyan">Client Success</p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
